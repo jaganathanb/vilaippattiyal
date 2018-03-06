@@ -189,6 +189,7 @@
     "stylefmt": "^6.0.0",
     "stylelint": "^8.4.0",
     "stylelint-config-standard": "^18.0.0",
+    "uglifyjs2": "^0.0.1",
     "uglify-js": "^3.3.11",
     "uglifyjs-webpack-plugin": "1.1.8",
     "url-loader": "^0.6.2",
@@ -215,8 +216,7 @@
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",
     "redux-logic": "^0.12.3",
-    "source-map-support": "^0.5.3",
-    "uglifyjs2": "^0.0.1"
+    "source-map-support": "^0.5.3"
   },
   "devEngines": {
     "node": ">=7.x",
