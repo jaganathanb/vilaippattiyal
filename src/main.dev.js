@@ -11,6 +11,8 @@
  * @flow
  */
 import { app, BrowserWindow } from 'electron';
+import path from 'path';
+
 import MenuBuilder from './menu';
 
 let mainWindow = null;
@@ -25,7 +27,6 @@ if (
   process.env.DEBUG_PROD === 'true'
 ) {
   require('electron-debug')();
-  const path = require('path');
   const p = path.join(__dirname, 'node_modules');
   require('module').globalPaths.push(p);
 }
@@ -61,7 +62,8 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728
+    height: 728,
+    icon: path.join(__dirname, '../resources/icons/64x64.png')
   });
 
   mainWindow.loadURL(`file://${__dirname}/../dist/index.html`);
