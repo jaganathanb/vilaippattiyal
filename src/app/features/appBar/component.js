@@ -4,7 +4,11 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
+import AccountCircle from 'material-ui-icons/AccountCircle';
 import MenuIcon from 'material-ui-icons/Menu';
+
+import { ipcRenderer } from 'electron';
+
 
 const drawerWidth = 240;
 
@@ -27,23 +31,31 @@ const styles = theme => ({
   },
   menuButton: {
     marginLeft: 12,
-    marginRight: 36
+    marginRight: 20
   },
-  hide: {
-    display: 'none'
+  title: {
+    flex: 1
+  },
+  accountCircle: {
+    padding: `0 ${theme.spacing.unit}px 0 ${theme.spacing.unit}px`
   }
 });
 
 type Props = {
   title: string,
   toggleSidebar: () => void,
-  classes: {}
+  classes: any
 };
 
 class MenuAppBar extends Component<Props> {
   props: Props;
+  shouldComponentUpdate(nextProps) {
+    return nextProps.title !== this.props.title || nextProps.classes.appBarShift !== this.props.classes.appBarShift;
+  }
   render() {
     const { title, toggleSidebar, classes } = this.props;
+    ipcRenderer.send('title', title); // updating internationalized title
+
     return (
       <AppBar position="absolute" className={classes.appBar}>
         <Toolbar disableGutters>
@@ -55,9 +67,19 @@ class MenuAppBar extends Component<Props> {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" noWrap>
+          <Typography variant="title" color="inherit" className={classes.title} noWrap>
             {title}
           </Typography>
+          <div className={classes.accountCircle}>
+            <IconButton
+              aria-owns="menu-appbar"
+              aria-haspopup="true"
+              onClick={this.handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
     );

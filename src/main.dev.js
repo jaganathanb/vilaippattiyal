@@ -10,12 +10,12 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 
 import MenuBuilder from './menu';
 
-let mainWindow = null;
+let mainWindow: any = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -76,6 +76,10 @@ app.on('ready', async () => {
     }
     mainWindow.show();
     mainWindow.focus();
+
+    ipcMain.on('title', (evt, title) => {
+      mainWindow.setTitle(title);
+    });
   });
 
   mainWindow.on('closed', () => {

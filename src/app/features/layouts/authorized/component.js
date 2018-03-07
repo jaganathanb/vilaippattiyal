@@ -55,8 +55,8 @@ class MiniDrawer extends React.Component<Props> {
   props: Props;
   render() {
     const {
- theme, intl, classes, match, isLoading, history 
-} = this.props;
+      theme, intl, classes, match, isLoading, history
+    } = this.props;
 
     const muiTheme = createMuiTheme(theme);
 
@@ -81,17 +81,14 @@ class MiniDrawer extends React.Component<Props> {
               />
               <Redirect to={`${match.url}`} />
             </Switch>
-            <Typography noWrap>
-              {'You think water moves fast? You should see ice.'}
-            </Typography>
           </main>
         </div>
         {isLoading && (
           <CircularProgress
             className="app-loader"
             color="#fff"
-            size={30}
-            thickness={2}
+            size={120}
+            thickness={3}
             style={styles.loader}
           />
         )}

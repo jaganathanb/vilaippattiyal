@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { intlShape } from 'react-intl';
 import classNames from 'classnames';
 
@@ -48,16 +48,14 @@ const styles = theme => ({
 type Props = {
   expanded: boolean,
   currentTab: string,
-  theme?: any,
   intl: intlShape.intl,
   onChangeTab: () => void,
   setSideBarVisibility: () => void,
   logout: () => void
 };
 
-class Sidebar extends React.Component<Props> {
+class Sidebar extends PureComponent<Props> {
   props: Props;
-
   menuItemClicked(menuItem = 'dashboard') {
     const { onChangeTab, setSideBarVisibility, expanded } = this.props;
     if (menuItem === 'logout') {
@@ -75,10 +73,7 @@ class Sidebar extends React.Component<Props> {
     const {
       expanded,
       currentTab,
-      setSideBarVisibility,
       classes,
-      history,
-      match,
       intl
     } = this.props;
 

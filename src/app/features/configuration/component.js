@@ -11,8 +11,6 @@ const styles = {
 };
 
 type Props = {
-  language: string,
-  theme: string,
   intl: intlShape.intl,
   onChangeLanguage: (language: string) => void,
   onChangeTheme: (theme: string) => void
@@ -22,8 +20,6 @@ class Configuration extends React.Component<Props> {
   props: Props;
   render() {
     const {
-      language,
-      theme,
       intl,
       onChangeTheme,
       onChangeLanguage

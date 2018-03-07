@@ -20,7 +20,7 @@ const logicMiddleware = createLogicMiddleware(logic, deps);
 
 const enhancer = applyMiddleware(logicMiddleware, router);
 
-function configureStore(initialState) {
+function configureStore(initialState: any) {
   return createStore(rootReducer, initialState, enhancer);
 }
 
