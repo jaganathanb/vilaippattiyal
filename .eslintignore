@@ -37,10 +37,10 @@ flow-typed/npm/*
 
 # App packaged
 release
-dist
-dll
-main.js
-main.js.map
+src/dist
+src/dll
+src/main.js
+src/main.js.map
 
 .idea
 npm-debug.log.*

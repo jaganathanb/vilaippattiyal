@@ -16,7 +16,7 @@ export const selectors = { isLoading, theme, user };
 const initialState = {
   isLoading: true,
   theme: localStorage.getItem('theme') || DEFAILT_THEME,
-  user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : null
+  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 };
 
 export default function reducer(state = initialState, action) {

@@ -14,7 +14,7 @@ const loginLogic = createLogic({
     const user = await Db.User.findOne({ where: { email: action.user.email } });
     if (user) {
       if (await user.isPasswordValid(action.user.password)) {
-        sessionStorage.setItem('user', JSON.stringify(user.dataValues));
+        localStorage.setItem('user', JSON.stringify(user.dataValues));
         dispatch({ type: sharedActionTypes.LOGIN_SUCCESS, user: user.dataValues });
         dispatch({ type: sharedActionTypes.LOGIN_CHECK });
       } else {

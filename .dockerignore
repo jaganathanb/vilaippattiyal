@@ -37,8 +37,8 @@ flow-typed/npm/*
 
 # App packaged
 release
-dist
-dll
+src/dist
+src/dll
 main.js
 main.js.map
 

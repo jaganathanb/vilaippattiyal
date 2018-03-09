@@ -66,7 +66,7 @@ app.on('ready', async () => {
     icon: path.join(__dirname, '../resources/icons/64x64.png')
   });
 
-  mainWindow.loadURL(`file://${__dirname}/../dist/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

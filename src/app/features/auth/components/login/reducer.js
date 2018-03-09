@@ -19,7 +19,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoggingIn: false,
-        loggedIn: sessionStorage.getItem('user') !== null
+        loggedIn: localStorage.getItem('user') !== null
       };
     case sharedActionTypes.LOGIN_SUCCESS:
       return { ...state, loggedIn: true, isLoggingIn: false };

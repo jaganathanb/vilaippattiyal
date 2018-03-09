@@ -1,11 +1,12 @@
 [ignore]
 <PROJECT_ROOT>/node_modules/*
-<PROJECT_ROOT>/app/main.prod.js
-<PROJECT_ROOT>/app/main.prod.js.map
-<PROJECT_ROOT>/app/dist/.*
+<PROJECT_ROOT>/src/node_modules/*
+<PROJECT_ROOT>/src/main.prod.js
+<PROJECT_ROOT>/src/main.prod.js.map
+<PROJECT_ROOT>/src/dist/.*
 <PROJECT_ROOT>/resources/.*
 <PROJECT_ROOT>/release/.*
-<PROJECT_ROOT>/dll/.*
+<PROJECT_ROOT>/src/dll/.*
 <PROJECT_ROOT>/release/.*
 <PROJECT_ROOT>/git/.*
 

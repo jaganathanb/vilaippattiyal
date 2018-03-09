@@ -13,14 +13,16 @@ const UserModel = (sequelizeInstance, name) => {
     },
     firstname: {
       type: Sequelize.STRING,
+      defaultValue: 'a',
       required: true
     },
     role: {
-      type: Sequelize.ENUM,
-      values: ['user', 'admin', 'disabled'],
+      type: Sequelize.STRING,
+      required: true,
       defaultValue: 'admin'
     },
     lastName: {
+      defaultValue: 'b',
       type: Sequelize.STRING
     },
     // username is really an email address
@@ -28,12 +30,14 @@ const UserModel = (sequelizeInstance, name) => {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,
+      defaultValue: 'a@a.com',
       validate: {
         isEmail: true,
       },
     },
     // hashed password
     password: {
+      password: bcrypt.hashSync('a', SALT_ROUNDS),
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -43,8 +47,8 @@ const UserModel = (sequelizeInstance, name) => {
     },
   }, {
     freezeTableName: true,
-      indexes: [{ unique: true, fields: ['email'] }]
-    });
+    indexes: [{ unique: true, fields: ['email'] }]
+  });
 
   User.hashPasswordBeforeSave = async (user, options) => {
     try {
@@ -58,6 +62,10 @@ const UserModel = (sequelizeInstance, name) => {
   User.createHooks = (user) => {
     user.hook('beforeCreate', user.hashPasswordBeforeSave);
     user.hook('beforeUpdate', user.hashPasswordBeforeSave);
+  };
+
+  User.associate = (user, models) => {
+    user.belongsToMany(models.Role, { through: 'UserRole' });
   };
 
   User.prototype.isPasswordValid = async function isPasswordValid(passwordInput) {

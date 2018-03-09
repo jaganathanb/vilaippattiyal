@@ -25,7 +25,7 @@ const globalReducer = (
     case sharedActionTypes.LOGIN_CHECK:
       return {
         ...state,
-        loggedIn: sessionStorage.getItem('user') !== null,
+        loggedIn: localStorage.getItem('user') !== null,
         isAppLoading: false
       };
     default:

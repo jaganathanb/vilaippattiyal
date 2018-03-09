@@ -21,8 +21,8 @@ export default merge.smart(baseConfig, {
   entry: './src/app/index',
 
   output: {
-    path: path.join(__dirname, 'dist'),
-    publicPath: './dist/',
+    path: path.join(__dirname, 'src/dist'),
+    publicPath: './src/dist/',
     filename: 'renderer.prod.js'
   },
 

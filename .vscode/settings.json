@@ -4,14 +4,15 @@
   "search.exclude": {
     ".git": true,
     ".eslintcache": true,
-    "app/dist": true,
-    "app/main.prod.js": true,
-    "app/main.prod.js.map": true,
+    "src/dist": true,
+    "src/main.prod.js": true,
+    "src/main.prod.js.map": true,
     "bower_components": true,
-    "dll": true,
+    "src/dll": true,
     "flow-typed": true,
     "release": true,
     "node_modules": true,
+    "src/node_modules": true,
     "npm-debug.log.*": true,
     "test/**/__snapshots__": true,
     "yarn.lock": true
@@ -29,7 +30,9 @@
       "node": true
     },
     "rules": {
-      "arrow-parens": ["off"],
+      "arrow-parens": [
+        "off"
+      ],
       "compat/compat": "error",
       "consistent-return": "off",
       "comma-dangle": "off",
@@ -60,12 +63,21 @@
       "react/jsx-filename-extension": [
         "error",
         {
-          "extensions": [".js", ".jsx"]
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
         }
       ],
       "react/prefer-stateless-function": "off"
     },
-    "plugins": ["flowtype", "import", "promise", "compat", "react"],
+    "plugins": [
+      "flowtype",
+      "import",
+      "promise",
+      "compat",
+      "react"
+    ],
     "settings": {
       "import/resolver": {
         "webpack": {

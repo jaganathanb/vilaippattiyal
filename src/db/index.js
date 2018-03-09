@@ -4,7 +4,8 @@ import dbConfig from './config';
 import * as models from './models';
 
 // Sequelize is a constructor
-const sequelize = new Sequelize(null,
+const sequelize = new Sequelize(
+  null,
   null,
   dbConfig[process.env.NODE_ENV].password, {
     dialect: 'sqlite',
@@ -24,7 +25,7 @@ Object.keys(vpModels).forEach(name => {
     vpModels[name].createHooks(vpModels[name]);
   }
   if (vpModels[name].associate) {
-    vpModels[name].associate(vpModels);
+    vpModels[name].associate(vpModels[name], vpModels);
   }
 });
 

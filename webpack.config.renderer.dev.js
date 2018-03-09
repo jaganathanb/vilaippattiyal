@@ -20,8 +20,8 @@ import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 CheckNodeEnv('development');
 
 const port = process.env.PORT || 1212;
-const publicPath = `http://localhost:${port}/dist`;
-const dll = path.resolve(process.cwd(), 'dll');
+const publicPath = `http://localhost:${port}/src/dist`;
+const dll = path.resolve(process.cwd(), 'src/dll');
 const manifest = path.resolve(dll, 'renderer.json');
 
 /**
@@ -45,7 +45,7 @@ export default merge.smart(baseConfig, {
   ],
 
   output: {
-    publicPath: `http://localhost:${port}/dist/`,
+    publicPath: `http://localhost:${port}/src/dist/`,
     filename: 'renderer.dev.js'
   },
 
@@ -249,7 +249,7 @@ export default merge.smart(baseConfig, {
     lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'src/dist'),
     watchOptions: {
       aggregateTimeout: 300,
       ignored: /node_modules/,

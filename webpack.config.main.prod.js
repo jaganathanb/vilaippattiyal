@@ -22,7 +22,7 @@ export default merge.smart(baseConfig, {
 
   output: {
     path: __dirname,
-    filename: './dist/main.prod.js'
+    filename: './src/dist/main.prod.js'
   },
 
   plugins: [
@@ -54,12 +54,12 @@ export default merge.smart(baseConfig, {
     new CopyWebpackPlugin([
       {
         from: './src/app/app.html',
-        to: './dist/index.html'
-      },
-      {
-        from: './src/node_modules',
-        to: 'dist/node_modules/'
-      }
+        to: './src/dist/index.html'
+      }// ,
+      // {
+      //   from: './src/node_modules',
+      //   to: 'src/dist/node_modules/'
+      // }
     ])
   ],
 

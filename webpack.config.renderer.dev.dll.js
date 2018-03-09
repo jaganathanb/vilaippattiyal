@@ -11,7 +11,7 @@ import CheckNodeEnv from './internals/scripts/CheckNodeEnv';
 
 CheckNodeEnv('development');
 
-const dist = path.resolve(process.cwd(), 'dll');
+const dist = path.resolve(process.cwd(), 'src/dll');
 
 export default merge.smart(baseConfig, {
   context: process.cwd(),
@@ -209,9 +209,9 @@ export default merge.smart(baseConfig, {
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
-        context: path.resolve(process.cwd(), 'app'),
+        context: path.resolve(process.cwd(), 'src/app'),
         output: {
-          path: path.resolve(process.cwd(), 'dll'),
+          path: path.resolve(process.cwd(), 'src/dll'),
         },
       },
     })
