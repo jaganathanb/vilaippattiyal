@@ -14,19 +14,19 @@ const loginLogic = createLogic({
     const user = await Db.User.findOne({ where: { email: action.user.email } });
     if (user) {
       if (await user.isPasswordValid(action.user.password)) {
-        sessionStorage.setItem('user', user.dataValues);
-        dispatch({ type: actionTypes.LOGIN_SUCCESS });
+        sessionStorage.setItem('user', JSON.stringify(user.dataValues));
+        dispatch({ type: sharedActionTypes.LOGIN_SUCCESS, user: user.dataValues });
         dispatch({ type: sharedActionTypes.LOGIN_CHECK });
       } else {
         dispatch({
-          type: actionTypes.LOGIN_FAILURE,
+          type: sharedActionTypes.LOGIN_FAILURE,
           loggedIn: true,
           reason: { type: 'credential' }
         });
       }
     } else {
       dispatch({
-        type: actionTypes.LOGIN_FAILURE,
+        type: sharedActionTypes.LOGIN_FAILURE,
         reason: { type: 'register' }
       });
     }
@@ -36,7 +36,7 @@ const loginLogic = createLogic({
 });
 
 const loginFailureLogic = createLogic({
-  type: actionTypes.LOGIN_FAILURE,
+  type: sharedActionTypes.LOGIN_FAILURE,
 
   process({ action }, dispatch, done) {
     switch (action.reason.type) {

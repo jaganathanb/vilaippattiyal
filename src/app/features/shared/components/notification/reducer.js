@@ -2,7 +2,7 @@ import { key, actionTypes } from './actions';
 
 export const selectors = {
   message: state => state[key].message,
-  type: state => state[key].type
+  type: state => state[key].type || 'info'
 };
 
 const initialState = {

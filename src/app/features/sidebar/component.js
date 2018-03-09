@@ -9,6 +9,7 @@ import { MenuList, MenuItem } from 'material-ui/Menu';
 import { ListItemIcon, ListItemText } from 'material-ui/List';
 import { Dashboard, Settings, PowerSettingsNew } from 'material-ui-icons';
 
+import menus from '../shared/routes';
 import translations from './translations';
 
 const drawerWidth = 240;
@@ -74,6 +75,7 @@ class Sidebar extends PureComponent<Props> {
       expanded,
       currentTab,
       classes,
+      user,
       intl
     } = this.props;
 
@@ -90,53 +92,25 @@ class Sidebar extends PureComponent<Props> {
       >
         <div className={classes.toolbar} />
         <MenuList>
-          <MenuItem
-            className={classes.menuItem}
-            onClick={this.menuItemClicked.bind(this, 'dashboard')}
-          >
-            <ListItemIcon className={classes.icon}>
-              <Dashboard
-                className={
-                  currentTab === 'dashboard' ? classes.dashboard : null
-                }
+          {menus.filter(menu => menu.requiredRole === user.role)
+            .map(menu => <MenuItem
+              className={classes.menuItem}
+              onClick={this.menuItemClicked.bind(this, menu.key)}
+              key={menu.key}
+            >
+              <ListItemIcon className={classes.icon}>
+                <Dashboard
+                  className={
+                    currentTab === menu.key ? classes[menu.key] : null
+                  }
+                />
+              </ListItemIcon>
+              <ListItemText
+                classes={{ primary: classes.primary }}
+                inset
+                primary={intl.formatMessage(menu.translation)}
               />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.primary }}
-              inset
-              primary={intl.formatMessage(translations.dashboardTitle)}
-            />
-          </MenuItem>
-          <MenuItem
-            className={classes.menuItem}
-            onClick={this.menuItemClicked.bind(this, 'configurations')}
-          >
-            <ListItemIcon className={classes.icon}>
-              <Settings
-                className={
-                  currentTab === 'configurations' ? classes.dashboard : null
-                }
-              />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.primary }}
-              inset
-              primary={intl.formatMessage(translations.configurationTitle)}
-            />
-          </MenuItem>
-          <MenuItem
-            className={classes.menuItem}
-            onClick={this.menuItemClicked.bind(this, 'logout')}
-          >
-            <ListItemIcon className={classes.icon}>
-              <PowerSettingsNew />
-            </ListItemIcon>
-            <ListItemText
-              classes={{ primary: classes.primary }}
-              inset
-              primary={intl.formatMessage(translations.logoutTitle)}
-            />
-          </MenuItem>
+            </MenuItem>)}
         </MenuList>
       </Drawer>
     );

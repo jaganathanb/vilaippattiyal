@@ -5,9 +5,20 @@ const SALT_ROUNDS = 10;
 
 const UserModel = (sequelizeInstance, name) => {
   const User = sequelizeInstance.define(name, {
-    firstName: {
+    id: {
+      type: Sequelize.UUID,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false
+    },
+    firstname: {
       type: Sequelize.STRING,
-      allowNull: false,
+      required: true
+    },
+    role: {
+      type: Sequelize.ENUM,
+      values: ['user', 'admin', 'disabled'],
+      defaultValue: 'admin'
     },
     lastName: {
       type: Sequelize.STRING
@@ -25,8 +36,15 @@ const UserModel = (sequelizeInstance, name) => {
     password: {
       type: Sequelize.STRING,
       allowNull: false,
-    }
-  });
+    },
+    createdAt: {
+      type: Sequelize.DATE,
+      allowNull: false
+    },
+  }, {
+    freezeTableName: true,
+      indexes: [{ unique: true, fields: ['email'] }]
+    });
 
   User.hashPasswordBeforeSave = async (user, options) => {
     try {

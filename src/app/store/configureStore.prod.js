@@ -6,7 +6,7 @@ import { createLogicMiddleware } from 'redux-logic';
 import rootReducer from '../reducers';
 import logic from '../logics';
 
-import api from '../../api';
+import api from '../../db';
 
 const history = createBrowserHistory();
 const router = routerMiddleware(history);

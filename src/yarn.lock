@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@journeyapps/sqlcipher@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@journeyapps/sqlcipher/-/sqlcipher-3.2.0.tgz#7a16907dda0f72a6414aa2a57e3e7dde8a3a6854"
+  dependencies:
+    nan "~2.7.0"
+    node-pre-gyp "~0.6.38"
+
 "@types/geojson@^1.0.0":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-1.0.6.tgz#3e02972728c69248c2af08d60a48cbb8680fffdf"

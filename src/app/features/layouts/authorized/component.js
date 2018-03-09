@@ -1,6 +1,5 @@
 import React from 'react';
 import { injectIntl, intlShape } from 'react-intl';
-import Typography from 'material-ui/Typography';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 
@@ -14,10 +13,10 @@ import { CircularProgress } from 'material-ui/Progress';
 import AppBar from '../../appBar';
 import Sidebar from '../../sidebar';
 
-import TimerPage from '../../dashboard';
-import ConfigurationPage from '../../configuration';
-
 import translations from './translations';
+
+import routes from '../../shared/routes';
+
 
 const styles = theme => ({
   root: {
@@ -45,17 +44,19 @@ const styles = theme => ({
 type Props = {
   theme: any,
   intl: intlShape.intl,
-  classes: {},
-  match: {},
+  classes: any,
+  match: any,
   intl: intlShape,
-  isLoading: boolean
+  isLoading: boolean,
+  history: any,
+  user: any
 };
 
 class MiniDrawer extends React.Component<Props> {
   props: Props;
   render() {
     const {
-      theme, intl, classes, match, isLoading, history
+      theme, intl, classes, match, isLoading, history, user
     } = this.props;
 
     const muiTheme = createMuiTheme(theme);
@@ -65,6 +66,7 @@ class MiniDrawer extends React.Component<Props> {
         <div className={classes.root}>
           <AppBar title={intl.formatMessage(translations.appBarTitle)} />
           <Sidebar
+            user={user}
             theme={muiTheme}
             intl={intl}
             history={history}
@@ -73,12 +75,10 @@ class MiniDrawer extends React.Component<Props> {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
-              <Route path={`${match.path}`} exact component={TimerPage} />
-              <Route path={`${match.path}dashboard`} component={TimerPage} />
-              <Route
-                path={`${match.path}configurations`}
-                component={ConfigurationPage}
-              />
+              {
+                routes.filter(route => route.requiredRole === user.role)
+                  .map(route => <Route {...route} path={`${match.path}${route.path}`} component={route.component} />)
+              }
               <Redirect to={`${match.url}`} />
             </Switch>
           </main>
@@ -86,11 +86,9 @@ class MiniDrawer extends React.Component<Props> {
         {isLoading && (
           <CircularProgress
             className="app-loader"
-            color="#fff"
+            color="primary"
             size={120}
-            thickness={3}
-            style={styles.loader}
-          />
+            thickness={3} />
         )}
       </MuiThemeProvider>
     );

@@ -10,7 +10,8 @@
       }
     ],
     "stage-0",
-    "react"
+    "react",
+    "flow"
   ],
   "plugins": [
     "add-module-exports"

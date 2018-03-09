@@ -2,9 +2,7 @@ import { createLogic } from 'redux-logic';
 
 import { actionTypes } from './actions';
 
-import {
-  notificationActionTypes
-} from '../../../shared/actions';
+import { notificationActionTypes } from '../../../shared/actions';
 import translations from './translations';
 
 const registrationLogic = createLogic({
@@ -21,7 +19,8 @@ const registrationLogic = createLogic({
         email: action.user.email,
         password: action.user.password,
         firstName: action.user.firstname,
-        lastName: action.user.lastname
+        lastName: action.user.lastname,
+        createdAt: new Date()
       };
 
       const newUser = await Db.User.create(data);

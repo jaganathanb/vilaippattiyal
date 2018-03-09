@@ -9,7 +9,7 @@ import rootActions from '../actions';
 
 import logic from '../logics';
 
-import api from '../../api';
+import api from '../../db';
 
 const history = createHashHistory();
 

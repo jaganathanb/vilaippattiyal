@@ -21,9 +21,9 @@ export default function reducer(state = initialState, action) {
         isLoggingIn: false,
         loggedIn: sessionStorage.getItem('user') !== null
       };
-    case actionTypes.LOGIN_SUCCESS:
-      return { ...state, loggedIn: action.loggedIn, isLoggingIn: false };
-    case actionTypes.LOGIN_FAILURE:
+    case sharedActionTypes.LOGIN_SUCCESS:
+      return { ...state, loggedIn: true, isLoggingIn: false };
+    case sharedActionTypes.LOGIN_FAILURE:
       return { ...state, isLoggingIn: false };
     default:
       return state;

@@ -9,7 +9,7 @@ import Root from './Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 
-import api from '../api';
+import api from '../db';
 
 const store = configureStore();
 
