@@ -5,6 +5,7 @@ import { selectors as sideBarSelector } from './reducer';
 import { actions as sideBarActions } from './actions';
 
 import { actions as sharedActions } from '../shared/actions';
+import menus from '../shared/routes';
 
 import SideBarPage from './container';
 
@@ -15,6 +16,7 @@ const enhance = connect(
   (state, ...rest) => ({
     currentTab: sideBarSelector.currentTab(state),
     expanded: sideBarSelector.expanded(state),
+    menus,
     ...rest
   }),
   {

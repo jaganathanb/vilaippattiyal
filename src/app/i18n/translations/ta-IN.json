@@ -3,6 +3,7 @@
   "vp.sideBar.dashboard.title": "கட்டுப்பாட்டகம்",
   "vp.sideBar.configuration.title": "உள்ளமைவு",
   "vp.sideBar.help.title": "உதவி",
+  "vp.sideBar.accounts.title": "பயனர் கணக்குகள்",
   "vp.sideBar.logout.title": "வெளியேறு",
   "vp.dashboard.timer.remaining_time": "மீதமுள்ள நேரம்: {count}",
   "vp.dashboard.timer.start": "தொடங்கு",
@@ -13,8 +14,10 @@
   "vp.login.loginButton.text": "உள் நுழை",
   "vp.login.noAccount.text": "கணக்கு இல்லை?",
   "vp.login.register.text": "ஒன்றை உருவாக்கவும்",
-  "vp.login.error.credentialDidnotMatch": "கடவுச்சொல் பொருந்தவில்லை, மீண்டும் முயற்சிக்கவும்!",
-  "vp.login.error.unknowUser": "நீங்கள் எங்களுடன் பதிவு செய்யவில்லை என்று தெரிகிறது!",
+  "vp.login.error.credentialDidnotMatch":
+    "கடவுச்சொல் பொருந்தவில்லை, மீண்டும் முயற்சிக்கவும்!",
+  "vp.login.error.unknowUser":
+    "நீங்கள் எங்களுடன் பதிவு செய்யவில்லை என்று தெரிகிறது!",
   "vp.registration.email": "மின்னஞ்சல்",
   "vp.registration.firstname": "முதல் பெயர்",
   "vp.registration.lastname": "கடைசி பெயர்",
@@ -22,8 +25,10 @@
   "vp.registration.registerButton.text": "பதிவு செய்",
   "vp.registration.haveAccount.text": "ஏற்கனவே ஒரு கணக்கு உள்ளதா?",
   "vp.registration.login.text": "உள் நுழை",
-  "vp.registration.userExsits": "இந்த மின்னஞ்சல் ஏற்கெனவே எடுத்துக் கொள்ளப்பட்டுள்ளது",
-  "vp.registration.success": "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்காப்பட்டது. உள் நுழைய, உங்கள் கணக்கு விவரங்களை பயன்படுத்தவும்",
+  "vp.registration.userExsits":
+    "இந்த மின்னஞ்சல் ஏற்கெனவே எடுத்துக் கொள்ளப்பட்டுள்ளது",
+  "vp.registration.success":
+    "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்காப்பட்டது. உள் நுழைய, உங்கள் கணக்கு விவரங்களை பயன்படுத்தவும்",
   "vp.configuration.title": "உள்ளமைவு",
   "vp.configuration.theme.title": "கருப்பொருள்",
   "vp.configuration.theme.dark": "கருமை",

@@ -4,6 +4,7 @@
   "vp.sideBar.configuration.title": "Configuration",
   "vp.sideBar.help.title": "Help",
   "vp.sideBar.logout.title": "Logout",
+  "vp.sideBar.accounts.title": "Accounts",
   "vp.dashboard.timer.remaining_time": "Remaining Time: {count}",
   "vp.dashboard.timer.start": "Start",
   "vp.dashboard.timer.stop": "Stop",
@@ -14,8 +15,10 @@
   "vp.login.validation.required": "Required",
   "vp.login.noAccount.text": "No account?",
   "vp.login.register.text": "Create one",
-  "vp.login.error.credentialDidnotMatch": "Credential did not match, try again!",
-  "vp.login.error.vp.login.error.unknowUser": "It seems that you are not registered with us!",
+  "vp.login.error.credentialDidnotMatch":
+    "Credential did not match, try again!",
+  "vp.login.error.vp.login.error.unknowUser":
+    "It seems that you are not registered with us!",
   "vp.registration.email": "Email",
   "vp.registration.firstname": "Firstname",
   "vp.registration.lastname": "Lastname",
@@ -25,7 +28,8 @@
   "vp.registration.haveAccount.text": "Already have an account?",
   "vp.registration.login.text": "Login",
   "vp.registration.userExsits": "This email is been taken already",
-  "vp.registration.success": "Your account has been created successfully. Please use your credentials to login.",
+  "vp.registration.success":
+    "Your account has been created successfully. Please use your credentials to login.",
   "vp.configuration.title": "Configurations",
   "vp.configuration.theme.title": "Themes",
   "vp.configuration.theme.dark": "Dark",
