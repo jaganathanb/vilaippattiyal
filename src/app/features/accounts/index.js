@@ -1,21 +1,23 @@
-import { connect } from "react-redux";
-import { selectors } from "./reducer";
+import { connect } from 'react-redux';
+import { selectors } from './reducer';
 
-import Configuration from "./component";
+import Accounts from './component';
 
-import { actions as sharedActions } from "../shared/actions";
-
-const { changeLocale, changeTheme } = sharedActions;
+import actions from './actions';
 
 const enhance = connect(
   state => ({
-    theme: selectors.theme(state),
-    language: selectors.language(state)
+    expanded: selectors.expanded(state),
+    users: selectors.users(state),
+    roles: selectors.roles(state),
+    rolesError: selectors.rolesError(state),
+    usersError: selectors.usersError(state)
   }),
   {
-    onChangeLanguage: changeLocale,
-    onChangeTheme: changeTheme
+    onExpand: actions.expand,
+    fetchUsers: actions.fetchUsers,
+    fetchRoles: actions.fetchRoles
   }
 );
 
-export default enhance(Configuration);
+export default enhance(Accounts);

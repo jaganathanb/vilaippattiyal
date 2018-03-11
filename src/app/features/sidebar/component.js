@@ -1,14 +1,14 @@
-import React, { PureComponent, Fragment } from "react";
-import { intlShape } from "react-intl";
-import classNames from "classnames";
+import React, { PureComponent, Fragment } from 'react';
+import { intlShape } from 'react-intl';
+import classNames from 'classnames';
 
-import { withStyles } from "material-ui/styles";
-import { green } from "material-ui/colors";
-import Drawer from "material-ui/Drawer";
-import { MenuList, MenuItem } from "material-ui/Menu";
-import { ListItemIcon, ListItemText } from "material-ui/List";
+import { withStyles } from 'material-ui/styles';
+import { green } from 'material-ui/colors';
+import Drawer from 'material-ui/Drawer';
+import { MenuList, MenuItem } from 'material-ui/Menu';
+import { ListItemIcon, ListItemText } from 'material-ui/List';
 
-import translations from "./translations";
+import translations from './translations';
 
 const drawerWidth = 240;
 
@@ -20,26 +20,26 @@ const styles = theme => ({
     color: green[500]
   },
   drawerPaper: {
-    position: "relative",
+    position: 'relative',
     width: drawerWidth,
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
     })
   },
   drawerPaperClose: {
     width: 60,
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
   },
   toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
     ...theme.mixins.toolbar
   }
 });
@@ -48,6 +48,9 @@ type Props = {
   expanded: boolean,
   currentTab: string,
   intl: intlShape.intl,
+  classes: any,
+  user: any,
+  menus: any[],
   onChangeTab: () => void,
   setSideBarVisibility: () => void,
   logout: () => void
@@ -55,9 +58,9 @@ type Props = {
 
 class Sidebar extends PureComponent<Props> {
   props: Props;
-  menuItemClicked(menuItem = "dashboard") {
+  menuItemClicked(menuItem = 'dashboard') {
     const { onChangeTab, setSideBarVisibility, expanded } = this.props;
-    if (menuItem === "logout") {
+    if (menuItem === 'logout') {
       this.props.logout();
     } else {
       onChangeTab(menuItem);
@@ -67,9 +70,10 @@ class Sidebar extends PureComponent<Props> {
       this.props.history.push(`${this.props.match.path}${menuItem}`);
     }
   }
-
   getMenuList(menus) {
-    const { currentTab, classes, user, intl } = this.props;
+    const {
+ currentTab, classes, user, intl 
+} = this.props;
     return (
       <MenuList>
         {menus.filter(menu => menu.requiredRole === user.role).map(menu => (
@@ -78,24 +82,16 @@ class Sidebar extends PureComponent<Props> {
             onClick={this.menuItemClicked.bind(this, menu.key)}
             key={menu.key}
           >
-            {menu.children ? (
-              this.getMenuList(menu.children)
-            ) : (
-              <Fragment>
-                <ListItemIcon className={classes.icon}>
-                  <menu.icon
-                    className={
-                      currentTab === menu.key ? classes[menu.key] : null
-                    }
-                  />
-                </ListItemIcon>
-                <ListItemText
-                  classes={{ primary: classes.primary }}
-                  inset
-                  primary={intl.formatMessage(menu.translation)}
-                />{" "}
-              </Fragment>
-            )}{" "}
+            <ListItemIcon className={classes.icon}>
+              <menu.icon
+                className={currentTab === menu.key ? classes[menu.key] : null}
+              />
+            </ListItemIcon>
+            <ListItemText
+              classes={{ primary: classes.primary }}
+              inset
+              primary={intl.formatMessage(menu.translation)}
+            />
           </MenuItem>
         ))}
       </MenuList>

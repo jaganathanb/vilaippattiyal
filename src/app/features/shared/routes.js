@@ -33,19 +33,6 @@ export default [
     key: 'accounts',
     component: Accounts,
     icon: AccountBox,
-    children: [
-      {
-        path: 'configurations',
-        key: 'configurations',
-        icon: Settings,
-        component: Configurations,
-        requiredRole: 'admin',
-        translation: {
-          id: 'vp.sideBar.configuration.title',
-          defaultMessage: 'Configuration'
-        }
-      }
-    ],
     requiredRole: 'admin',
     translation: {
       id: 'vp.sideBar.accounts.title',

@@ -1,7 +1,11 @@
-import React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
-import Card, { CardContent, CardActions, CardHeader } from 'material-ui/Card';
-import RaisedButton from 'material-ui/Button';
+import React, { PureComponent } from 'react';
+import { withStyles } from 'material-ui/styles';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary
+} from 'material-ui/ExpansionPanel';
+import Typography from 'material-ui/Typography';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import {
   Grid,
@@ -9,52 +13,98 @@ import {
   TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 
-import translations from './translations';
-
-const styles = {
-  label: { width: '10em', display: 'inline-block' },
-  button: { margin: '1em' }
-};
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
+    flexShrink: 0
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary
+  }
+});
 
 type Props = {
-  intl: intlShape.intl,
-  fetchRoles: () => void,
-  fetchUsers: () => void
+  expanded: string,
+  classes: any,
+  users: any[],
+  roles: any[],
+  onExpand: (panel: string) => void,
+  fetchUsers: () => any[],
+  fetchRoles: () => any[]
 };
 
-class Configuration extends React.Component<Props> {
+class Accounts extends PureComponent<Props> {
   props: Props;
-
   componentWillMount() {
     this.props.fetchUsers();
     this.props.fetchRoles();
   }
+
   render() {
+    const {
+ classes, expanded, onExpand, users, roles 
+} = this.props;
+
     return (
-      <Card>
-        <CardHeader title="Accounts" className="title" />
-        <CardContent>
-          <Grid
-            rows={[
-              { id: 0, product: 'DevExtreme', owner: 'DevExpress' },
-              { id: 1, product: 'DevExtreme Reactive', owner: 'DevExpress' }
-            ]}
-            columns={[
-              { name: 'id', title: 'ID' },
-              { name: 'product', title: 'Product' },
-              { name: 'owner', title: 'Owner' }
-            ]}
-          >
-            <Table />
-            <TableHeaderRow />
-          </Grid>
-        </CardContent>
-        <CardActions>
-          <RaisedButton variant="raised">OK</RaisedButton>
-        </CardActions>
-      </Card>
+      <div className={classes.root}>
+        <ExpansionPanel
+          expanded={expanded === 'users'}
+          onChange={() => onExpand('users')}
+        >
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Users</Typography>
+            <Typography className={classes.secondaryHeading}>
+              I am Users list
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid
+              rows={users}
+              columns={[
+                { name: 'id', title: 'User Id' },
+                { name: 'firstname', title: 'First name' },
+                { name: 'lastname', title: 'Last name' },
+                { name: 'email', title: 'Email' },
+                { name: 'role', title: 'Role' },
+                { name: 'status', title: 'Status' }
+              ]}
+            >
+              <Table />
+              <TableHeaderRow />
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+        <ExpansionPanel
+          expanded={expanded === 'roles'}
+          onChange={() => onExpand('roles')}
+        >
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>Roles</Typography>
+            <Typography className={classes.secondaryHeading}>
+              I am roles panel
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid
+              rows={roles}
+              columns={[
+                { name: 'id', title: 'ID' },
+                { name: 'name', title: 'Name' }
+              ]}
+            >
+              <Table />
+              <TableHeaderRow />
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </div>
     );
   }
 }
 
-export default injectIntl(Configuration);
+export default withStyles(styles)(Accounts);

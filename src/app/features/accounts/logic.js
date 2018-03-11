@@ -1,21 +1,39 @@
 import { createLogic } from 'redux-logic';
 
-import { actionTypes as sharedActionTypes } from '../shared/actions';
+import actions, { actionTypes } from './actions';
 
-const localeLogic = createLogic({
-  type: sharedActionTypes.CHANGE_LOCALE,
-  process({ action }, dispatch, done) {
-    localStorage.setItem('language', action.language);
+const usersLogic = createLogic({
+  type: actionTypes.FETCH_USERS,
+  async process({ action, Db }, dispatch, done) {
+    dispatch(actions.fetchUsersInProgress());
+    let users = null;
+    try {
+      users = await Db.User.findAll({
+        where: {
+          status: 'enabled'
+        }
+      });
+      dispatch(actions.fetchUsersSuccess(users));
+    } catch (error) {
+      dispatch(actions.fetchUsersFailure('Something went wrong!'));
+    }
     done();
   }
 });
 
-const themeLogic = createLogic({
-  type: sharedActionTypes.CHANGE_THEME,
-  process({ action }, dispatch, done) {
-    localStorage.setItem('theme', action.theme);
+const rolesLogic = createLogic({
+  type: actionTypes.FETCH_ROLES,
+  async process({ action, Db }, dispatch, done) {
+    dispatch(actions.fetchRolesInProgress());
+    let roles = null;
+    try {
+      roles = await Db.Role.findAll();
+      dispatch(actions.fetchRolesSuccess(roles));
+    } catch (error) {
+      dispatch(actions.fetchRolesFailure('Something went wrong!'));
+    }
     done();
   }
 });
 
-export default [themeLogic, localeLogic];
+export default [rolesLogic, usersLogic];
