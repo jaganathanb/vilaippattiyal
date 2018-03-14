@@ -79,35 +79,6 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@devexpress/dx-core@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@devexpress/dx-core/-/dx-core-1.0.3.tgz#c310b540229f83d6be5797fb2a5da5491757d21b"
-
-"@devexpress/dx-grid-core@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@devexpress/dx-grid-core/-/dx-grid-core-1.0.3.tgz#e6b2708593c10c6dfab2cbc4c2c3f82b5ab910c2"
-
-"@devexpress/dx-react-core@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-core/-/dx-react-core-1.0.3.tgz#362194fe6a86dd2addf493894df9dbf17a466ee5"
-  dependencies:
-    "@devexpress/dx-core" "1.0.3"
-    prop-types "^15.6.0"
-
-"@devexpress/dx-react-grid-material-ui@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-grid-material-ui/-/dx-react-grid-material-ui-1.0.3.tgz#c0844349c6b2ad5d2fdca7faf87f3cc56ad61121"
-  dependencies:
-    classnames "^2.2.5"
-    prop-types "^15.6.0"
-
-"@devexpress/dx-react-grid@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@devexpress/dx-react-grid/-/dx-react-grid-1.0.3.tgz#82d142d0ae66b4c28ce15bd19dac39f2191108f1"
-  dependencies:
-    "@devexpress/dx-grid-core" "1.0.3"
-    prop-types "^15.6.0"
-
 "@sinonjs/formatio@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/formatio/-/formatio-2.0.0.tgz#84db7e9eb5531df18a8c5e0bfb6e449e55e654b2"

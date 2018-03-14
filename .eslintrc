@@ -11,14 +11,13 @@
   },
   "rules": {
     "linebreak-style": 0,
-    "arrow-parens": [
-      "off"
-    ],
+    "arrow-parens": ["off"],
     "compat/compat": "error",
     "consistent-return": "off",
     "comma-dangle": "off",
     "generator-star-spacing": "off",
     "import/no-unresolved": "error",
+    "no-mixed-operators": "off",
     "import/no-extraneous-dependencies": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "no-console": "off",
@@ -44,21 +43,12 @@
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "react/prefer-stateless-function": "off"
   },
-  "plugins": [
-    "flowtype",
-    "import",
-    "promise",
-    "compat",
-    "react"
-  ],
+  "plugins": ["flowtype", "import", "promise", "compat", "react"],
   "settings": {
     "import/resolver": {
       "webpack": {

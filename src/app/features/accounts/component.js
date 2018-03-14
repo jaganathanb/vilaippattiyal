@@ -7,11 +7,7 @@ import ExpansionPanel, {
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import {
-  Grid,
-  Table,
-  TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+import VPTable from '../shared/components/table';
 
 const styles = theme => ({
   root: {
@@ -63,20 +59,18 @@ class Accounts extends PureComponent<Props> {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid
-              rows={users}
+            <VPTable
+              title="Users"
+              data={users}
               columns={[
-                { name: 'id', title: 'User Id' },
-                { name: 'firstname', title: 'First name' },
-                { name: 'lastname', title: 'Last name' },
-                { name: 'email', title: 'Email' },
-                { name: 'role', title: 'Role' },
-                { name: 'status', title: 'Status' }
+                { id: 'id', title: 'User Id' },
+                { id: 'firstname', title: 'First name' },
+                { id: 'lastname', title: 'Last name' },
+                { id: 'email', title: 'Email' },
+                { id: 'role', title: 'Role' },
+                { id: 'status', title: 'Status' }
               ]}
-            >
-              <Table />
-              <TableHeaderRow />
-            </Grid>
+            />
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel
@@ -90,16 +84,14 @@ class Accounts extends PureComponent<Props> {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid
-              rows={roles}
+            <VPTable
+              title="Roles"
+              data={roles}
               columns={[
-                { name: 'id', title: 'ID' },
-                { name: 'name', title: 'Name' }
+                { id: 'id', title: 'ID' },
+                { id: 'name', title: 'Name' }
               ]}
-            >
-              <Table />
-              <TableHeaderRow />
-            </Grid>
+            />
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>
