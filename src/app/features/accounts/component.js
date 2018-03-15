@@ -7,7 +7,7 @@ import ExpansionPanel, {
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import VPTable from '../shared/components/table';
+import VPGrid from '../shared/components/grid';
 
 const styles = theme => ({
   root: {
@@ -59,16 +59,16 @@ class Accounts extends PureComponent<Props> {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <VPTable
+            <VPGrid
               title="Users"
-              data={users}
+              rows={users}
               columns={[
-                { id: 'id', title: 'User Id' },
-                { id: 'firstname', title: 'First name' },
-                { id: 'lastname', title: 'Last name' },
-                { id: 'email', title: 'Email' },
-                { id: 'role', title: 'Role' },
-                { id: 'status', title: 'Status' }
+                { name: 'id', title: 'User Id' },
+                { name: 'firstname', title: 'First name' },
+                { name: 'lastname', title: 'Last name' },
+                { name: 'email', title: 'Email' },
+                { name: 'role', title: 'Role' },
+                { name: 'status', title: 'Status' }
               ]}
             />
           </ExpansionPanelDetails>
@@ -84,12 +84,12 @@ class Accounts extends PureComponent<Props> {
             </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <VPTable
+            <VPGrid
               title="Roles"
-              data={roles}
+              rows={roles}
               columns={[
-                { id: 'id', title: 'ID' },
-                { id: 'name', title: 'Name' }
+                { name: 'id', title: 'ID' },
+                { name: 'name', title: 'Name' }
               ]}
             />
           </ExpansionPanelDetails>
