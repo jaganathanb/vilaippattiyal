@@ -8,6 +8,8 @@ import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import VPGrid from '../shared/components/grid';
+import UserForm from './components/userForm';
+import DeleteGrid from '../shared/components/deleteGrid';
 
 const styles = theme => ({
   root: {
@@ -60,8 +62,10 @@ class Accounts extends PureComponent<Props> {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
-              title="Users"
               rows={users}
+              AddComponent={UserForm}
+              EditComponent={UserForm}
+              DeleteComponent={DeleteGrid}
               columns={[
                 { name: 'id', title: 'User Id' },
                 { name: 'firstname', title: 'First name' },
@@ -69,6 +73,14 @@ class Accounts extends PureComponent<Props> {
                 { name: 'email', title: 'Email' },
                 { name: 'role', title: 'Role' },
                 { name: 'status', title: 'Status' }
+              ]}
+              columnOrder={[
+                'id',
+                'firstname',
+                'lastname',
+                'email',
+                'role',
+                'status'
               ]}
             />
           </ExpansionPanelDetails>
@@ -85,12 +97,15 @@ class Accounts extends PureComponent<Props> {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
-              title="Roles"
               rows={roles}
+              AddComponent={UserForm}
+              EditComponent={UserForm}
+              DeleteComponent={DeleteGrid}
               columns={[
                 { name: 'id', title: 'ID' },
                 { name: 'name', title: 'Name' }
               ]}
+              columnOrder={['id', 'name']}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>

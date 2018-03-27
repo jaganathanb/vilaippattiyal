@@ -1,140 +1,337 @@
 import React, { PureComponent } from 'react';
-
 import {
   SortingState,
-  SelectionState,
-  FilteringState,
+  EditingState,
   PagingState,
-  GroupingState,
-  IntegratedFiltering,
   IntegratedPaging,
-  IntegratedSorting,
-  IntegratedSelection
+  IntegratedSorting
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableHeaderRow,
-  TableFilterRow,
-  TableSelection,
-  TableGroupRow,
-  GroupingPanel,
+  TableEditRow,
+  TableEditColumn,
   PagingPanel,
   DragDropProvider,
-  TableColumnReordering,
-  TableColumnResizing,
-  Toolbar
+  TableColumnReordering
 } from '@devexpress/dx-react-grid-material-ui';
+import Paper from 'material-ui/Paper';
+import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
+import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Edit';
+import SaveIcon from 'material-ui-icons/Save';
+import CancelIcon from 'material-ui-icons/Cancel';
 import { withStyles } from 'material-ui/styles';
 
-import Validator from '../validator';
+import { uniq } from 'lodash';
+
+import VPDialog from '../dialog';
 
 const styles = theme => ({
-  title: {
-    color: theme.palette.text.primary
+  lookupEditCell: {
+    paddingTop: theme.spacing.unit * 0.875,
+    paddingRight: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit
+  },
+  inputRoot: {
+    width: '100%'
   }
 });
+
+const AddButton = ({ onExecute }) => (
+  <div style={{ textAlign: 'center' }}>
+    <Button color="primary" onClick={onExecute} title="Create new row">
+      New
+    </Button>
+  </div>
+);
+
+const EditButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Edit row">
+    <EditIcon />
+  </IconButton>
+);
+
+const DeleteButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Delete row">
+    <DeleteIcon />
+  </IconButton>
+);
+
+const CommitButton = ({ onExecute }) => (
+  <IconButton onClick={onExecute} title="Save changes">
+    <SaveIcon />
+  </IconButton>
+);
+
+const CancelButton = ({ onExecute }) => (
+  <IconButton color="secondary" onClick={onExecute} title="Cancel changes">
+    <CancelIcon />
+  </IconButton>
+);
+
+const commandComponents = {
+  add: AddButton,
+  edit: EditButton,
+  delete: DeleteButton,
+  commit: CommitButton,
+  cancel: CancelButton
+};
+
+const Command = ({ id, onExecute }) => {
+  const CommandButton = commandComponents[id];
+  return <CommandButton onExecute={onExecute} />;
+};
+
+const Cell = props => <Table.Cell {...props} />;
+
+const EditCell = props => <TableEditRow.Cell {...props} />;
+
+const getRowId = row => row.id;
 
 type Props = {
   rows: any[],
   columns: any[],
-  sorting?: any[],
-  onSortingChange?: (sorting: any[]) => void,
-  selection?: any[],
-  onSelectionChange?: (selection: any[]) => void,
-  grouping?: any[],
-  onGroupingChange?: (grouping: any[]) => void,
-  expandedGroups?: any[],
-  onExpandedGroupsChange?: (expandedGroups: any[]) => void,
-  filters?: any[],
-  onFiltersChange?: (filters: any[]) => void,
-  currentPage?: number,
-  onCurrentPageChange?: (currentPage: number) => void,
-  pageSize?: number,
-  onPageSizeChange?: (pageSize: number) => void,
-  pageSizes?: number[],
-  columnOrder?: string[],
-  onColumnOrderChange?: (columnOrder: string[]) => void,
-  columnWidths?: any[],
-  onColumnWidthsChange?: (columnWidths: any[]) => void
+  columnOrder: string[],
+  AddComponent: any,
+  EditComponent: any,
+  DeleteComponent: any
 };
-class VPGrid extends PureComponent<Props> {
-  props: Props;
 
-  static defaultProps = {
-    sorting: [],
-    selection: [],
-    filters: [],
-    currentPage: 0,
-    pageSize: 10,
-    pageSizes: [5, 10, 15],
-    columnOrder: [],
-    columnWidths: [],
-    onSortingChange: () => ({}),
-    onSelectionChange: () => ({}),
-    onFiltersChange: () => ({}),
-    onCurrentPageChange: () => ({}),
-    onPageSizeChange: () => ({}),
-    onColumnWidthsChange: () => ({}),
-    onColumnOrderChange: () => ({})
+class VPGrid extends PureComponent<Props> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      sorting: [],
+      editingRowIds: [],
+      addedRows: [],
+      rowChanges: {},
+      currentPage: 0,
+      deletingRows: [],
+      pageSize: 0,
+      pageSizes: [5, 10, 0],
+      currentColumnOrder: props.columnOrder,
+      currentRows: props.rows,
+      currentColumns: props.columns
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.areDifferentByIds(nextProps.rows, this.props.rows, 'id')) {
+      this.setState({ currentRows: nextProps.rows });
+    }
+
+    if (this.areDifferentByIds(nextProps.columns, this.props.columns, 'name')) {
+      this.setState({ currentColumns: nextProps.columns });
+    }
+
+    if (
+      nextProps.columnOrder.toString() !== this.props.columnOrder.toString()
+    ) {
+      const tableColumnExtensions = nextProps.columns.map(column => {
+        if (column.type === 'number') {
+          return {
+            columnName: column.name,
+            align: 'right'
+          };
+        }
+        return { columnName: column.name };
+      });
+
+      this.setState({
+        currentColumnOrder: nextProps.columnOrder,
+        tableColumnExtensions
+      });
+    }
+  }
+
+  areDifferentByIds = (next, current, prop) => {
+    const nextids = uniq(next.map(x => x[prop]));
+    const currids = uniq(current.map(x => x[prop]));
+    const combinedIds = uniq(nextids.concat(currids));
+    return (
+      nextids.length !== currids.length || combinedIds.length !== currids.length
+    );
+  };
+  changeSorting = sorting => this.setState({ sorting });
+  changeEditingRowIds = editingRowIds => {
+    this.setState({ editingRowIds });
+  };
+  changeAddedRows = addedRows =>
+    this.setState({
+      addedRows: addedRows.map(row => (Object.keys(row).length ? row : {}))
+    });
+  changeRowChanges = rowChanges => this.setState({ rowChanges });
+  changeCurrentPage = currentPage => this.setState({ currentPage });
+  changePageSize = pageSize => this.setState({ pageSize });
+  commitChanges = ({ added, changed, deleted }) => {
+    let { currentRows } = this.state;
+    if (added) {
+      const startingAddedId =
+        currentRows.length - 1 > 0
+          ? currentRows[currentRows.length - 1].id + 1
+          : 0;
+      currentRows = [
+        ...currentRows,
+        ...added.map((row, index) => ({
+          id: startingAddedId + index,
+          ...currentRows
+        }))
+      ];
+    }
+    if (changed) {
+      currentRows = currentRows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+    }
+    this.setState({
+      currentRows,
+      deletingRows: deleted || this.state.deletingRows
+    });
+  };
+  cancelDelete = () => this.setState({ deletingRows: [] });
+  cancelEdit = () => this.setState({ editingRowIds: [] });
+
+  cancelAdd = () => this.setState({ addedRows: [] });
+
+  saveRow = () => {
+    const rows = this.state.currentRows.slice();
+    this.state.editingRowIds.forEach(rowId => {
+      const index = rows.findIndex(row => row.id === rowId);
+      if (index > -1) {
+        rows.splice(index, 1);
+      }
+    });
+    this.setState({ currentRows: rows, deletingRows: [] });
+  };
+  updateRow = () => {
+    const rows = this.state.currentRows.slice();
+    this.state.editingRowIds.forEach(rowId => {
+      const index = rows.findIndex(row => row.id === rowId);
+      if (index > -1) {
+        rows.splice(index, 1);
+      }
+    });
+    this.setState({ currentRows: rows, deletingRows: [] });
+  };
+  deleteRows = () => {
+    const rows = this.state.currentRows.slice();
+    this.state.deletingRows.forEach(rowId => {
+      const index = rows.findIndex(row => row.id === rowId);
+      if (index > -1) {
+        rows.splice(index, 1);
+      }
+    });
+    this.setState({ currentRows: rows, deletingRows: [] });
+  };
+  changeColumnOrder = order => {
+    this.setState({ currentColumnOrder: order });
   };
   render() {
     const {
-      rows,
-      columns,
       sorting,
-      onSortingChange,
-      selection,
-      onSelectionChange,
-      filters,
-      onFiltersChange,
+      editingRowIds,
+      addedRows,
+      rowChanges,
       currentPage,
-      onCurrentPageChange,
+      deletingRows,
       pageSize,
-      onPageSizeChange,
       pageSizes,
-      columnWidths,
-      onColumnWidthsChange
-    } = this.props;
-    return (
-      <div>
-        <Grid rows={rows} columns={columns}>
-          <FilteringState filters={filters} onFiltersChange={onFiltersChange} />
-          <SortingState sorting={sorting} onSortingChange={onSortingChange} />
+      currentColumnOrder,
+      currentColumns,
+      tableColumnExtensions,
+      currentRows
+    } = this.state;
 
+    const { DeleteComponent, AddComponent, EditComponent } = this.props;
+
+    return (
+      <Paper>
+        <Grid rows={currentRows} columns={currentColumns} getRowId={getRowId}>
+          <SortingState
+            sorting={sorting}
+            onSortingChange={this.changeSorting}
+          />
           <PagingState
             currentPage={currentPage}
-            onCurrentPageChange={onCurrentPageChange}
+            onCurrentPageChange={this.changeCurrentPage}
             pageSize={pageSize}
-            onPageSizeChange={onPageSizeChange}
+            onPageSizeChange={this.changePageSize}
           />
 
-          <SelectionState
-            selection={selection}
-            onSelectionChange={onSelectionChange}
-          />
-
-          <IntegratedFiltering />
           <IntegratedSorting />
           <IntegratedPaging />
-          <IntegratedSelection />
 
-          <Table />
+          <EditingState
+            rowChanges={rowChanges}
+            onRowChangesChange={this.changeRowChanges}
+            addedRows={addedRows}
+            onAddedRowsChange={this.changeAddedRows}
+            editingRowIds={editingRowIds}
+            onEditingRowIdsChange={this.changeEditingRowIds}
+            onCommitChanges={this.commitChanges}
+          />
 
-          <Validator
-            shouldRender={columnWidths.length > 0}
-            Component={TableColumnResizing}
-            columnWidths={columnWidths}
-            onColumnWidthsChange={onColumnWidthsChange}
+          <DragDropProvider />
+
+          <Table
+            columnExtensions={tableColumnExtensions}
+            cellComponent={Cell}
+          />
+
+          <TableColumnReordering
+            order={currentColumnOrder}
+            onOrderChange={this.changeColumnOrder}
           />
 
           <TableHeaderRow showSortingControls />
-          <TableFilterRow />
-          <TableSelection showSelectAll />
-          <Toolbar />
+          <TableEditColumn
+            width={120}
+            showAddCommand={!addedRows.length}
+            showEditCommand
+            showDeleteCommand
+            commandComponent={Command}
+          />
           <PagingPanel pageSizes={pageSizes} />
         </Grid>
-      </div>
+
+        <VPDialog
+          title="Delete User"
+          open={!!deletingRows.length}
+          onNegative={this.cancelDelete}
+          onPositive={this.deleteRows}
+          contentText={`Are you sure to delete the user${
+            this.deleteRows.length > 1 ? 's?' : '?'
+          }`}
+          Content={() => (
+            <DeleteComponent
+              rows={currentRows.filter(row => deletingRows.indexOf(row.id) > -1)}
+              columns={currentColumns}
+              columnExtensions={this.state.tableColumnExtensions}
+              cellComponent={Cell}
+            />
+          )}
+        />
+
+        <VPDialog
+          title="Edit User"
+          open={!!editingRowIds.length}
+          onNegative={this.cancelEdit}
+          onPositive={this.updateRow}
+          contentText="Fill the details below"
+          Content={() => <EditComponent />}
+        />
+
+        <VPDialog
+          title="Add User"
+          open={!!addedRows.length}
+          onNegative={this.cancelAdd}
+          onPositive={this.saveRow}
+          contentText="Fill the details below"
+          Content={() => <AddComponent />}
+        />
+      </Paper>
     );
   }
 }

@@ -5,7 +5,9 @@ export const selectors = {
   rolesError: state => state[key].rolesError,
   usersError: state => state[key].usersError,
   users: state => state[key].users,
-  roles: state => state[key].roles
+  roles: state => state[key].roles,
+  isUserSaving: state => state[key].isUserSaving,
+  userSaved: state => state[key].userSaved
 };
 
 const initialState = {

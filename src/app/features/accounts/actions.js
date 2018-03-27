@@ -1,5 +1,9 @@
 export const key = 'accounts';
 
+const SAVE_USER = 'SAVE_USER';
+const SAVE_USER_SUCCESS = 'SAVE_USER_SUCCESS';
+const SAVE_USER_FAILURE = 'SAVE_USER_FAILURE';
+
 const FETCH_USERS = 'FETCH_USERS';
 const FETCH_USERS_FAILED = 'FETCH_USERS_FAILED';
 const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
@@ -12,6 +16,9 @@ const FETCH_ROLES_PROGRESS = 'FETCH_ROLES_PROGRESS';
 
 const EXPAND_ACCOUNT_PANEL = 'EXPAND_ACCOUNT_PANEL';
 export const actionTypes = {
+  SAVE_USER,
+  SAVE_USER_SUCCESS,
+  SAVE_USER_FAILURE,
   FETCH_USERS,
   FETCH_USERS_FAILED,
   FETCH_USERS_SUCCESS,
@@ -23,6 +30,7 @@ export const actionTypes = {
   EXPAND_ACCOUNT_PANEL
 };
 
+const addUser = user => ({ type: SAVE_USER, user });
 const fetchUsers = () => ({ type: FETCH_USERS });
 const fetchRoles = () => ({ type: FETCH_ROLES });
 const fetchUsersInProgress = () => ({ type: FETCH_USERS_PROGRESS });
@@ -37,6 +45,7 @@ const expand = panel => ({
 });
 
 export default {
+  addUser,
   fetchRoles,
   fetchUsers,
   expand,

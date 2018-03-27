@@ -13,7 +13,7 @@ const usersLogic = createLogic({
           status: 'enabled'
         }
       });
-      dispatch(actions.fetchUsersSuccess(users));
+      dispatch(actions.fetchUsersSuccess(users.map(user => user.dataValues)));
     } catch (error) {
       dispatch(actions.fetchUsersFailure('Something went wrong!'));
     }
@@ -28,7 +28,7 @@ const rolesLogic = createLogic({
     let roles = null;
     try {
       roles = await Db.Role.findAll();
-      dispatch(actions.fetchRolesSuccess(roles));
+      dispatch(actions.fetchRolesSuccess(roles.map(role => role.dataValues)));
     } catch (error) {
       dispatch(actions.fetchRolesFailure('Something went wrong!'));
     }
