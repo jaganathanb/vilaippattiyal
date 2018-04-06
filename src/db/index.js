@@ -1,7 +1,7 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from 'sequelize';
 
-import dbConfig from "./config";
-import * as models from "./models";
+import dbConfig from './config';
+import * as models from './models';
 
 // Sequelize is a constructor
 const sequelize = new Sequelize(
@@ -9,8 +9,8 @@ const sequelize = new Sequelize(
   null,
   dbConfig[process.env.NODE_ENV].password,
   {
-    dialect: "sqlite",
-    dialectModulePath: "@journeyapps/sqlcipher",
+    dialect: 'sqlite',
+    dialectModulePath: '@journeyapps/sqlcipher',
     storage: dbConfig[process.env.NODE_ENV].storage
   }
 );

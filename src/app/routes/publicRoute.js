@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { actions as sharedActions } from '../features/shared/actions';
+import { isLoggedIn } from '../features/shared/actions';
 
 type Props = {
   isAppLoading: boolean,
@@ -43,6 +43,6 @@ export default connect(
     isAppLoading: state.global.isAppLoading
   }),
   {
-    isLoggedIn: sharedActions.isLoggedIn
+    isLoggedIn
   }
 )(PublicRoute);

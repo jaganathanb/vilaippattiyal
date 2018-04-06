@@ -12,11 +12,11 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import AppBar from '../../appBar';
 import Sidebar from '../../sidebar';
+import VPModal from '../../shared/components/modal';
 
 import translations from './translations';
 
 import routes from '../../shared/routes';
-
 
 const styles = theme => ({
   root: {
@@ -56,7 +56,13 @@ class MiniDrawer extends React.Component<Props> {
   props: Props;
   render() {
     const {
-      theme, intl, classes, match, isLoading, history, user
+      theme,
+      intl,
+      classes,
+      match,
+      isLoading,
+      history,
+      user
     } = this.props;
 
     const muiTheme = createMuiTheme(theme);
@@ -75,12 +81,18 @@ class MiniDrawer extends React.Component<Props> {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
-              {
-                routes.filter(route => route.requiredRole === user.role)
-                  .map(route => <Route {...route} path={`${match.path}${route.path}`} component={route.component} />)
-              }
+              {routes
+                .filter(route => route.requiredRole === user.role)
+                .map(route => (
+                  <Route
+                    {...route}
+                    path={`${match.path}${route.path}`}
+                    component={route.component}
+                  />
+                ))}
               <Redirect to={`${match.url}`} />
             </Switch>
+            <VPModal />
           </main>
         </div>
         {isLoading && (
@@ -88,7 +100,8 @@ class MiniDrawer extends React.Component<Props> {
             className="app-loader"
             color="primary"
             size={120}
-            thickness={3} />
+            thickness={3}
+          />
         )}
       </MuiThemeProvider>
     );

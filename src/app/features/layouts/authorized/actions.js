@@ -1,5 +1,3 @@
-export const key = 'authorized';
-
 // action type constants
 const APP_LOADING = 'APP_LOADING';
 

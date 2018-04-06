@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import AccountCircle from 'material-ui-icons/AccountCircle';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import MenuIcon from 'material-ui-icons/Menu';
 
 import { ipcRenderer } from 'electron';
 
-
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const styles = theme => ({
   appBar: {
@@ -44,16 +44,34 @@ const styles = theme => ({
 type Props = {
   title: string,
   toggleSidebar: () => void,
+  logout: () => void,
   classes: any
 };
 
-class MenuAppBar extends Component<Props> {
+class MenuAppBar extends PureComponent<Props> {
   props: Props;
-  shouldComponentUpdate(nextProps) {
-    return nextProps.title !== this.props.title || nextProps.classes.appBarShift !== this.props.classes.appBarShift;
-  }
+
+  state = {
+    anchorEl: null
+  };
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  logOut = () => {
+    this.handleClose();
+    this.props.logout();
+  };
   render() {
     const { title, toggleSidebar, classes } = this.props;
+    const { anchorEl } = this.state;
+
+    const open = Boolean(anchorEl);
+
     ipcRenderer.send('title', title); // updating internationalized title
 
     return (
@@ -67,7 +85,12 @@ class MenuAppBar extends Component<Props> {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="title" color="inherit" className={classes.title} noWrap>
+          <Typography
+            variant="title"
+            color="inherit"
+            className={classes.title}
+            noWrap
+          >
             {title}
           </Typography>
           <div className={classes.accountCircle}>
@@ -79,6 +102,17 @@ class MenuAppBar extends Component<Props> {
             >
               <AccountCircle />
             </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              open={open}
+              onClose={this.handleClose}
+            >
+              <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+              <MenuItem onClick={this.logOut}>Logout</MenuItem>
+            </Menu>
           </div>
         </Toolbar>
       </AppBar>

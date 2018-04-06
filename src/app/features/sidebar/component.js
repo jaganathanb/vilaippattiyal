@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import { intlShape } from 'react-intl';
 import classNames from 'classnames';
 
@@ -8,15 +8,16 @@ import Drawer from 'material-ui/Drawer';
 import { MenuList, MenuItem } from 'material-ui/Menu';
 import { ListItemIcon, ListItemText } from 'material-ui/List';
 
-import translations from './translations';
-
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const styles = theme => ({
   dashboard: {
     color: green[500]
   },
   configurations: {
+    color: green[500]
+  },
+  accounts: {
     color: green[500]
   },
   drawerPaper: {
@@ -52,23 +53,18 @@ type Props = {
   user: any,
   menus: any[],
   onChangeTab: () => void,
-  setSideBarVisibility: () => void,
-  logout: () => void
+  setSideBarVisibility: () => void
 };
 
 class Sidebar extends PureComponent<Props> {
   props: Props;
   menuItemClicked(menuItem = 'dashboard') {
     const { onChangeTab, setSideBarVisibility, expanded } = this.props;
-    if (menuItem === 'logout') {
-      this.props.logout();
-    } else {
-      onChangeTab(menuItem);
-      if (expanded) {
-        setSideBarVisibility();
-      }
-      this.props.history.push(`${this.props.match.path}${menuItem}`);
+    onChangeTab(menuItem);
+    if (expanded) {
+      setSideBarVisibility();
     }
+    this.props.history.push(`${this.props.match.path}${menuItem}`);
   }
   getMenuList(menus) {
     const {

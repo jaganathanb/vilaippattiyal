@@ -1,9 +1,9 @@
 import { createLogic } from 'redux-logic';
 
-import { actionTypes as sharedActionTypes } from '../shared/actions';
+import { CHANGE_LOCALE, CHANGE_THEME } from '../shared/actions';
 
 const localeLogic = createLogic({
-  type: sharedActionTypes.CHANGE_LOCALE,
+  type: CHANGE_LOCALE,
   process({ action }, dispatch, done) {
     localStorage.setItem('language', action.language);
     done();
@@ -11,7 +11,7 @@ const localeLogic = createLogic({
 });
 
 const themeLogic = createLogic({
-  type: sharedActionTypes.CHANGE_THEME,
+  type: CHANGE_THEME,
   process({ action }, dispatch, done) {
     localStorage.setItem('theme', action.theme);
     done();

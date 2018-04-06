@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { CircularProgress } from 'material-ui/Progress';
 import { withStyles } from 'material-ui/styles';
 
-import { actions as sharedActions } from '../features/shared/actions';
+import { isLoggedIn } from '../features/shared/actions';
 
 const styles = () => ({
   center: {
@@ -72,6 +72,6 @@ export default withStyles(styles)(connect(
       isAppLoading: state.global.isAppLoading
     }),
     {
-      isLoggedIn: sharedActions.isLoggedIn
+      isLoggedIn
     }
   )(PrivateRoute));

@@ -10,7 +10,6 @@ import {
   Grid,
   Table,
   TableHeaderRow,
-  TableEditRow,
   TableEditColumn,
   PagingPanel,
   DragDropProvider,
@@ -87,17 +86,21 @@ const Command = ({ id, onExecute }) => {
 
 const Cell = props => <Table.Cell {...props} />;
 
-const EditCell = props => <TableEditRow.Cell {...props} />;
-
 const getRowId = row => row.id;
 
 type Props = {
   rows: any[],
   columns: any[],
   columnOrder: string[],
-  AddComponent: any,
-  EditComponent: any,
-  DeleteComponent: any
+  UserDialog: any,
+  DeleteComponent: any,
+  actions?: {
+    add: (data: any) => void,
+    edit: (data: any) => void,
+    delete: (data: any[]) => void
+  },
+  showModal?: (type: string, props: any) => void,
+  hideModal?: () => void
 };
 
 class VPGrid extends PureComponent<Props> {
@@ -158,7 +161,21 @@ class VPGrid extends PureComponent<Props> {
   };
   changeSorting = sorting => this.setState({ sorting });
   changeEditingRowIds = editingRowIds => {
+    const { UserDialog } = this.props;
     this.setState({ editingRowIds });
+    this.props.showModal({
+      id: 2,
+      type: 'custom',
+      title: 'Edit User',
+      getContent: () => (
+        <UserDialog
+          edit
+          initialValues={
+            this.state.currentRows.filter(row => editingRowIds.indexOf(row.id) > -1)[0]
+          }
+        />
+      )
+    });
   };
   changeAddedRows = addedRows =>
     this.setState({
@@ -192,10 +209,11 @@ class VPGrid extends PureComponent<Props> {
   };
   cancelDelete = () => this.setState({ deletingRows: [] });
   cancelEdit = () => this.setState({ editingRowIds: [] });
-
   cancelAdd = () => this.setState({ addedRows: [] });
 
-  saveRow = () => {
+  saveRow = data => {
+    this.props.actions.save(data);
+
     const rows = this.state.currentRows.slice();
     this.state.editingRowIds.forEach(rowId => {
       const index = rows.findIndex(row => row.id === rowId);
@@ -215,7 +233,8 @@ class VPGrid extends PureComponent<Props> {
     });
     this.setState({ currentRows: rows, deletingRows: [] });
   };
-  deleteRows = () => {
+  deleteRows = data => {
+    this.props.actions.delete(data);
     const rows = this.state.currentRows.slice();
     this.state.deletingRows.forEach(rowId => {
       const index = rows.findIndex(row => row.id === rowId);
@@ -244,7 +263,7 @@ class VPGrid extends PureComponent<Props> {
       currentRows
     } = this.state;
 
-    const { DeleteComponent, AddComponent, EditComponent } = this.props;
+    const { DeleteComponent, UserDialog } = this.props;
 
     return (
       <Paper>
@@ -295,8 +314,7 @@ class VPGrid extends PureComponent<Props> {
           />
           <PagingPanel pageSizes={pageSizes} />
         </Grid>
-
-        <VPDialog
+        {/* <VPDialog
           title="Delete User"
           open={!!deletingRows.length}
           onNegative={this.cancelDelete}
@@ -313,24 +331,24 @@ class VPGrid extends PureComponent<Props> {
             />
           )}
         />
-
-        <VPDialog
+        <UserDialog
           title="Edit User"
+          edit
           open={!!editingRowIds.length}
           onNegative={this.cancelEdit}
           onPositive={this.updateRow}
+          data={
+            currentRows.filter(row => editingRowIds.indexOf(row.id) > -1)[0]
+          }
           contentText="Fill the details below"
-          Content={() => <EditComponent />}
         />
-
-        <VPDialog
+        <UserDialog
           title="Add User"
           open={!!addedRows.length}
           onNegative={this.cancelAdd}
           onPositive={this.saveRow}
           contentText="Fill the details below"
-          Content={() => <AddComponent />}
-        />
+        /> */}
       </Paper>
     );
   }

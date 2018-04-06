@@ -31,13 +31,21 @@ type Props = {
   classes: any,
   users: any[],
   roles: any[],
+  saveUser: (data: any) => void,
+  deleteUser: (data: any) => void,
   onExpand: (panel: string) => void,
   fetchUsers: () => any[],
-  fetchRoles: () => any[]
+  fetchRoles: () => any[],
+  showModal?: (type: string, props: any) => void,
+  hideModal?: () => void
 };
 
 class Accounts extends PureComponent<Props> {
   props: Props;
+  static defaultProps = {
+    showModal: () => {},
+    hideModal: () => {}
+  };
   componentWillMount() {
     this.props.fetchUsers();
     this.props.fetchRoles();
@@ -45,8 +53,16 @@ class Accounts extends PureComponent<Props> {
 
   render() {
     const {
- classes, expanded, onExpand, users, roles 
-} = this.props;
+      classes,
+      expanded,
+      onExpand,
+      users,
+      roles,
+      saveUser,
+      deleteUser,
+      showModal,
+      hideModal
+    } = this.props;
 
     return (
       <div className={classes.root}>
@@ -63,25 +79,27 @@ class Accounts extends PureComponent<Props> {
           <ExpansionPanelDetails>
             <VPGrid
               rows={users}
-              AddComponent={UserForm}
-              EditComponent={UserForm}
+              UserDialog={UserForm}
               DeleteComponent={DeleteGrid}
               columns={[
                 { name: 'id', title: 'User Id' },
-                { name: 'firstname', title: 'First name' },
-                { name: 'lastname', title: 'Last name' },
+                { name: 'firstName', title: 'First name' },
+                { name: 'lastName', title: 'Last name' },
                 { name: 'email', title: 'Email' },
                 { name: 'role', title: 'Role' },
                 { name: 'status', title: 'Status' }
               ]}
               columnOrder={[
                 'id',
-                'firstname',
-                'lastname',
+                'firstName',
+                'lastName',
                 'email',
                 'role',
                 'status'
               ]}
+              actions={{ add: saveUser, edit: saveUser, delete: deleteUser }}
+              showModal={showModal}
+              hideModal={hideModal}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -98,14 +116,20 @@ class Accounts extends PureComponent<Props> {
           <ExpansionPanelDetails>
             <VPGrid
               rows={roles}
-              AddComponent={UserForm}
-              EditComponent={UserForm}
+              UserDialog={props => <UserForm {...props} />}
               DeleteComponent={DeleteGrid}
               columns={[
                 { name: 'id', title: 'ID' },
                 { name: 'name', title: 'Name' }
               ]}
               columnOrder={['id', 'name']}
+              actions={{
+                add: data =>
+                  new Promise(resolve => {
+                    this.props.addUser(data);
+                    resolve(true);
+                  })
+              }}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>

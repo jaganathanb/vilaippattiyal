@@ -1,4 +1,6 @@
-import { key, actionTypes } from './actions';
+import { actionTypes } from './actions';
+
+export const key = 'registration';
 
 export const selectors = {
   isRegistering: state => state[key].isRegistering,

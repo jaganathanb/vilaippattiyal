@@ -2,8 +2,10 @@ import { createLogic } from 'redux-logic';
 
 import { actionTypes } from './actions';
 import {
-  actionTypes as sharedActionTypes,
-  notificationActionTypes
+  LOGIN_FAILURE,
+  SHOW_NOTIFICATION,
+  LOGIN_SUCCESS,
+  LOGIN_CHECK
 } from '../../../shared/actions';
 import translations from './translations';
 
@@ -15,18 +17,21 @@ const loginLogic = createLogic({
     if (user) {
       if (await user.isPasswordValid(action.user.password)) {
         localStorage.setItem('user', JSON.stringify(user.dataValues));
-        dispatch({ type: sharedActionTypes.LOGIN_SUCCESS, user: user.dataValues });
-        dispatch({ type: sharedActionTypes.LOGIN_CHECK });
+        dispatch({
+          type: LOGIN_SUCCESS,
+          user: user.dataValues
+        });
+        dispatch({ type: LOGIN_CHECK });
       } else {
         dispatch({
-          type: sharedActionTypes.LOGIN_FAILURE,
+          type: LOGIN_FAILURE,
           loggedIn: true,
           reason: { type: 'credential' }
         });
       }
     } else {
       dispatch({
-        type: sharedActionTypes.LOGIN_FAILURE,
+        type: LOGIN_FAILURE,
         reason: { type: 'register' }
       });
     }
@@ -36,13 +41,13 @@ const loginLogic = createLogic({
 });
 
 const loginFailureLogic = createLogic({
-  type: sharedActionTypes.LOGIN_FAILURE,
+  type: LOGIN_FAILURE,
 
   process({ action }, dispatch, done) {
     switch (action.reason.type) {
       case 'register':
         dispatch({
-          type: notificationActionTypes.SHOW_NOTIFICATION,
+          type: SHOW_NOTIFICATION,
           notification: {
             message: translations.unknownUserErrorText,
             type: 'error'
@@ -51,7 +56,7 @@ const loginFailureLogic = createLogic({
         break;
       case 'credential':
         dispatch({
-          type: notificationActionTypes.SHOW_NOTIFICATION,
+          type: SHOW_NOTIFICATION,
           notification: {
             message: translations.credentialMatchErrorText,
             type: 'error'

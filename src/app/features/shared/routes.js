@@ -1,8 +1,8 @@
+import { Dashboard, Settings, AccountBox } from 'material-ui-icons';
+
 import VPDashboard from '../dashboard';
 import Configurations from '../configuration';
 import Accounts from '../accounts';
-
-import { Dashboard, Settings, AccountBox } from 'material-ui-icons';
 
 export default [
   {

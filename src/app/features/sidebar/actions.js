@@ -1,5 +1,3 @@
-export const key = 'sidebar';
-
 // action type constants
 const CHANGE_TAB = 'CHANGE_TAB';
 

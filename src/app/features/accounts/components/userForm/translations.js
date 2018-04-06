@@ -5,6 +5,14 @@ export default defineMessages({
     id: 'vp.userForm.email',
     defaultMessage: 'Email'
   },
+  enabled: {
+    id: 'vp.userForm.enabled',
+    defaultMessage: 'Enabled'
+  },
+  role: {
+    id: 'vp.userForm.role',
+    defaultMessage: 'Role'
+  },
   firstName: {
     id: 'vp.userForm.firstname',
     defaultMessage: 'Firstname'
@@ -16,6 +24,10 @@ export default defineMessages({
   password: {
     id: 'vp.userForm.password',
     defaultMessage: 'Password'
+  },
+  save: {
+    id: 'vp.userForm.save',
+    defaultMessage: 'Save'
   },
   userExsits: {
     id: 'vp.userForm.userExsits',

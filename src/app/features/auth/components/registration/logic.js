@@ -2,7 +2,7 @@ import { createLogic } from 'redux-logic';
 
 import { actionTypes } from './actions';
 
-import { notificationActionTypes } from '../../../shared/actions';
+import { SHOW_NOTIFICATION } from '../../../shared/actions';
 import translations from './translations';
 
 const registrationLogic = createLogic({
@@ -25,11 +25,17 @@ const registrationLogic = createLogic({
 
       const newUser = await Db.User.create(data);
       if (!newUser) {
-        dispatch({ type: actionTypes.REGISTRATION_FAILURE, reason: { type: 'error' } });
+        dispatch({
+          type: actionTypes.REGISTRATION_FAILURE,
+          reason: { type: 'error' }
+        });
       }
 
       if (newUser) {
-        dispatch({ type: actionTypes.REGISTRATION_SUCCESS, reason: { type: 'success' } });
+        dispatch({
+          type: actionTypes.REGISTRATION_SUCCESS,
+          reason: { type: 'success' }
+        });
       }
     }
 
@@ -44,7 +50,7 @@ const registrationFailureLogic = createLogic({
     switch (action.reason.type) {
       case 'register':
         dispatch({
-          type: notificationActionTypes.SHOW_NOTIFICATION,
+          type: SHOW_NOTIFICATION,
           notification: {
             message: translations.userExsits,
             type: 'error'
@@ -53,7 +59,7 @@ const registrationFailureLogic = createLogic({
         break;
       case 'error':
         dispatch({
-          type: notificationActionTypes.SHOW_NOTIFICATION,
+          type: SHOW_NOTIFICATION,
           notification: {
             message: translations.somethingWentWrong,
             type: 'error'
@@ -74,7 +80,7 @@ const registrationSuccessLogic = createLogic({
     switch (action.reason.type) {
       case 'success':
         dispatch({
-          type: notificationActionTypes.SHOW_NOTIFICATION,
+          type: SHOW_NOTIFICATION,
           notification: {
             message: translations.success
           }
@@ -87,5 +93,9 @@ const registrationSuccessLogic = createLogic({
   }
 });
 
-export default [registrationLogic, registrationFailureLogic, registrationSuccessLogic];
+export default [
+  registrationLogic,
+  registrationFailureLogic,
+  registrationSuccessLogic
+];
 //

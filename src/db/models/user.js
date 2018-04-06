@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize";
-import bcrypt from "bcrypt";
+import { Sequelize } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10;
 
@@ -13,24 +13,25 @@ const UserModel = (sequelizeInstance, name) => {
         defaultValue: Sequelize.UUIDV4,
         allowNull: false
       },
-      firstname: {
+      firstName: {
         type: Sequelize.STRING,
-        defaultValue: "a",
+        defaultValue: 'a',
         required: true
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
         required: true,
-        defaultValue: "enabled",
-        values: ["enabled", "disabled"]
+        defaultValue: true,
+        values: [true, false]
       },
       role: {
         type: Sequelize.STRING,
         required: true,
-        defaultValue: "admin"
+        defaultValue: 'admin',
+        values: ['admin', 'user']
       },
       lastName: {
-        defaultValue: "b",
+        defaultValue: 'b',
         type: Sequelize.STRING
       },
       // username is really an email address
@@ -38,14 +39,14 @@ const UserModel = (sequelizeInstance, name) => {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
-        defaultValue: "a@a.com",
+        defaultValue: 'a@a.com',
         validate: {
           isEmail: true
         }
       },
       // hashed password
       password: {
-        password: bcrypt.hashSync("a", SALT_ROUNDS),
+        password: bcrypt.hashSync('a', SALT_ROUNDS),
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -56,31 +57,29 @@ const UserModel = (sequelizeInstance, name) => {
     },
     {
       freezeTableName: true,
-      indexes: [{ unique: true, fields: ["email"] }]
+      indexes: [{ unique: true, fields: ['email'] }]
     }
   );
 
   User.hashPasswordBeforeSave = async (user, options) => {
     try {
       const hash = await bcrypt.hash(user.password, SALT_ROUNDS);
-      return user.setDataValue("password", hash);
+      return user.setDataValue('password', hash);
     } catch (error) {
       return options.sequelize.Promise.reject(error);
     }
   };
 
   User.createHooks = user => {
-    user.hook("beforeCreate", user.hashPasswordBeforeSave);
-    user.hook("beforeUpdate", user.hashPasswordBeforeSave);
+    user.hook('beforeCreate', user.hashPasswordBeforeSave);
+    user.hook('beforeUpdate', user.hashPasswordBeforeSave);
   };
 
   User.associate = (user, models) => {
-    user.belongsToMany(models.Role, { through: "UserRole" });
+    user.belongsToMany(models.Role, { through: 'UserRole' });
   };
 
-  User.prototype.isPasswordValid = async function isPasswordValid(
-    passwordInput
-  ) {
+  User.prototype.isPasswordValid = async function isPasswordValid(passwordInput) {
     return bcrypt.compare(passwordInput, this.password);
   };
 

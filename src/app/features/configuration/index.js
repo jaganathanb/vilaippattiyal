@@ -3,9 +3,7 @@ import { selectors as configSelectors } from './reducer';
 
 import Configuration from './component';
 
-import { actions as sharedActions } from '../shared/actions';
-
-const { changeLocale, changeTheme } = sharedActions;
+import { changeLocale, changeTheme } from '../shared/actions';
 
 const enhance = connect(
   state => ({

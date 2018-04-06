@@ -1,9 +1,11 @@
-import { actionTypes as sharedActionTypes } from '../shared/actions';
+import { CHANGE_THEME } from '../shared/actions';
 
 import themes, { defaultTheme } from '../../themes';
 import { DEFAILT_THEME } from '../../utils/constants';
 
-import key from './actions';
+export const key = 'auth';
+export loginReducer, { key as loginKey } from './components/login/reducer';
+export registrationReducer, {key as registrationKey} from './components/registration/reducer';
 
 export const selectors = {
   theme: state => {
@@ -18,13 +20,9 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case sharedActionTypes.CHANGE_THEME:
+    case CHANGE_THEME:
       return { ...state, theme: action.theme };
     default:
       return state;
   }
 }
-
-
-export loginReducer from './components/login/reducer';
-export registrationReducer from './components/registration/reducer';

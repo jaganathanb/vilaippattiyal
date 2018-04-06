@@ -1,8 +1,10 @@
-export const key = 'accounts';
-
 const SAVE_USER = 'SAVE_USER';
 const SAVE_USER_SUCCESS = 'SAVE_USER_SUCCESS';
 const SAVE_USER_FAILURE = 'SAVE_USER_FAILURE';
+
+const DELETE_USER = 'DELETE_USER';
+const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
+const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
 
 const FETCH_USERS = 'FETCH_USERS';
 const FETCH_USERS_FAILED = 'FETCH_USERS_FAILED';
@@ -19,6 +21,9 @@ export const actionTypes = {
   SAVE_USER,
   SAVE_USER_SUCCESS,
   SAVE_USER_FAILURE,
+  DELETE_USER_FAILURE,
+  DELETE_USER_SUCCESS,
+  DELETE_USER,
   FETCH_USERS,
   FETCH_USERS_FAILED,
   FETCH_USERS_SUCCESS,
@@ -30,7 +35,8 @@ export const actionTypes = {
   EXPAND_ACCOUNT_PANEL
 };
 
-const addUser = user => ({ type: SAVE_USER, user });
+const saveUser = user => ({ type: SAVE_USER, user });
+const deleteUser = user => ({ type: DELETE_USER, user });
 const fetchUsers = () => ({ type: FETCH_USERS });
 const fetchRoles = () => ({ type: FETCH_ROLES });
 const fetchUsersInProgress = () => ({ type: FETCH_USERS_PROGRESS });
@@ -45,7 +51,8 @@ const expand = panel => ({
 });
 
 export default {
-  addUser,
+  saveUser,
+  deleteUser,
   fetchRoles,
   fetchUsers,
   expand,

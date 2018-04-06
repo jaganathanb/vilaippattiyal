@@ -1,4 +1,4 @@
-import { actionTypes as sharedActioTypes } from '../shared/actions';
+import { CHANGE_LOCALE, CHANGE_THEME } from '../shared/actions';
 
 import {
   DEFAULT_LOCALE,
@@ -26,12 +26,12 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case sharedActioTypes.CHANGE_LOCALE:
+    case CHANGE_LOCALE:
       return {
         ...state,
         language: action.language
       };
-    case sharedActioTypes.CHANGE_THEME:
+    case CHANGE_THEME:
       return {
         ...state,
         theme: action.theme

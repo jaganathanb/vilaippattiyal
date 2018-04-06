@@ -1,4 +1,6 @@
-import { key, actionTypes } from './actions';
+import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from '../../actions';
+
+export const key = 'notification';
 
 export const selectors = {
   message: state => state[key].message,
@@ -12,9 +14,15 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case actionTypes.SHOW_NOTIFICATION:
-      return { ...state, ...{ message: action.notification.message, type: action.notification.type } };
-    case actionTypes.HIDE_NOTIFICATION:
+    case SHOW_NOTIFICATION:
+      return {
+        ...state,
+        ...{
+          message: action.notification.message,
+          type: action.notification.type
+        }
+      };
+    case HIDE_NOTIFICATION:
       return { ...state, ...{ message: {}, type: 'info' } };
     default:
       return state;

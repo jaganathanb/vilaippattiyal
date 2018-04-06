@@ -1,5 +1,3 @@
-export const key = 'login';
-
 const LOGIN = 'LOGIN';
 
 export const actionTypes = {

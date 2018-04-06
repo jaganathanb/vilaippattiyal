@@ -11,9 +11,12 @@ import Dialog, {
 
 import { withStyles } from 'material-ui/styles';
 
+import { isEqual } from 'lodash';
+
 type Props = {
   open?: boolean,
   title?: string,
+  data?: any,
   contentText?: string,
   onPositive?: () => void,
   onNegative?: () => void,
@@ -32,6 +35,7 @@ const styles = theme => ({
 class VPDialog extends PureComponent<Props> {
   static defaultProps = {
     open: false,
+    data: {},
     onNegative: () => {},
     onPositive: () => {},
     title: '',
@@ -39,6 +43,16 @@ class VPDialog extends PureComponent<Props> {
     positiveText: 'Ok',
     negativeText: 'Cancel'
   };
+
+  state = {
+    data: null
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (!isEqual(nextProps.data, this.props.data)) {
+      this.state.data = nextProps.data;
+    }
+  }
   render() {
     const {
       open,
@@ -51,6 +65,8 @@ class VPDialog extends PureComponent<Props> {
       positiveText,
       Content
     } = this.props;
+
+    const { data } = this.state;
 
     return (
       <Dialog
@@ -71,7 +87,7 @@ class VPDialog extends PureComponent<Props> {
           <Button onClick={onNegative} color="primary">
             {negativeText}
           </Button>
-          <Button onClick={onPositive} color="secondary">
+          <Button onClick={() => onPositive(data)} color="secondary">
             {positiveText}
           </Button>
         </DialogActions>

@@ -1,7 +1,13 @@
 import {
-  key, TIMER_START, TIMER_CANCEL, TIMER_RESET, TIMER_END,
-  TIMER_DECREMENT, TIMER_START_ERROR
+  TIMER_START,
+  TIMER_CANCEL,
+  TIMER_RESET,
+  TIMER_END,
+  TIMER_DECREMENT,
+  TIMER_START_ERROR
 } from './actions';
+
+export const key = 'dashboard';
 
 export const selectors = {
   value: state => state[key].value,

@@ -2,10 +2,7 @@ import { connect } from 'react-redux';
 import { selectors } from './reducer';
 
 import Notification from './component';
-
-import { actions } from './actions';
-
-const { hideNotification } = actions;
+import { hideNotification } from '../../actions';
 
 const enhance = connect(
   state => ({

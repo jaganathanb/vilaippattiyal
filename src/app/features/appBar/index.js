@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { actions as sharedActions } from "../shared/actions";
-import AppBar from "./component";
+import { setSideBarVisibility, logout } from '../shared/actions';
+import AppBar from './component';
 
 const enhance = connect(
   (state, ...rest) => ({
@@ -9,7 +9,8 @@ const enhance = connect(
     ...rest
   }),
   {
-    toggleSidebar: sharedActions.setSideBarVisibility
+    toggleSidebar: setSideBarVisibility,
+    logout
   }
 );
 

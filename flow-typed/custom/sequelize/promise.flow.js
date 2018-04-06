@@ -1,0 +1,1 @@
+declare export var Promise: typeof Bluebird;declare module.exports: typeof Promise

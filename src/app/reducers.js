@@ -1,44 +1,35 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux';
 
-import { reducer as reduxFormReducer } from "redux-form";
+import { reducer as reduxFormReducer } from 'redux-form';
 
-import timerReducer from "./features/dashboard/reducer";
-import sideBarReducer from "./features/sidebar/reducer";
-import configurationReducer, {
-  key as configKey
-} from "./features/configuration/reducer";
+import timerReducer, { key as timerKey } from './features/dashboard/reducer';
+import sideBarReducer, { key as sideBarKey } from './features/sidebar/reducer';
+import configurationReducer, {key as configKey} from './features/configuration/reducer';
 import authReducer, {
   loginReducer,
-  registrationReducer
-} from "./features/auth/reducer";
-import authorizedReducer from "./features/layouts/authorized/reducer";
-import { notificationReducer } from "./features/shared/reducer";
-import accountsReducer from "./features/accounts/reducer";
+  registrationReducer,
+  loginKey,
+  registrationKey,
+  key as authKey
+} from './features/auth/reducer';
+import modalReducer, {key as modalKey} from './features/shared/components/modal/reducer';
+import notificationReducer, {key as notificationKey} from './features/shared/components/notification/reducer';
+import authorizedReducer, {key as authorizedKey} from './features/layouts/authorized/reducer';
+import accountsReducer, {key as accountsKey} from './features/accounts/reducer';
 
-import { key as timerKey } from "./features/dashboard/actions";
-import { key as sideBarKey } from "./features/sidebar/actions";
-import { key as accountKey } from "./features/accounts/actions";
-import authKey, {
-  loginActions,
-  registrationActions
-} from "./features/auth/actions";
-import { key as authorizedKey } from "./features/layouts/authorized/actions";
-import {
-  actionTypes as sharedActionTypes,
-  notificationKey
-} from "./features/shared/actions";
+import { LOGIN_CHECK } from './features/shared/actions';
 
-const statesToBePersisted = ["config", "auth", "authorized"];
+const statesToBePersisted = ['config', 'auth', 'authorized'];
 
 const globalReducer = (
   state = { loggedIn: false, isAppLoading: true },
   action
 ) => {
   switch (action.type) {
-    case sharedActionTypes.LOGIN_CHECK:
+    case LOGIN_CHECK:
       return {
         ...state,
-        loggedIn: localStorage.getItem("user") !== null,
+        loggedIn: localStorage.getItem('user') !== null,
         isAppLoading: false
       };
     default:
@@ -50,18 +41,19 @@ const appReducer = combineReducers({
   [timerKey]: timerReducer,
   [sideBarKey]: sideBarReducer,
   [configKey]: configurationReducer,
-  [loginActions.key]: loginReducer,
-  [registrationActions.key]: registrationReducer,
+  [loginKey]: loginReducer,
+  [registrationKey]: registrationReducer,
   [authorizedKey]: authorizedReducer,
   [authKey]: authReducer,
   [notificationKey]: notificationReducer,
-  [accountKey]: accountsReducer,
+  [modalKey]: modalReducer,
+  [accountsKey]: accountsReducer,
   form: reduxFormReducer,
   global: globalReducer
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === "LOGOUT") {
+  if (action.type === 'LOGOUT') {
     Object.keys(state).forEach(key => {
       if (!statesToBePersisted.some(s => s === key)) {
         state[key] = undefined;
