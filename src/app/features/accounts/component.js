@@ -8,8 +8,6 @@ import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import VPGrid from '../shared/components/grid';
-import UserForm from './components/userForm';
-import DeleteGrid from '../shared/components/deleteGrid';
 
 const styles = theme => ({
   root: {
@@ -31,21 +29,13 @@ type Props = {
   classes: any,
   users: any[],
   roles: any[],
-  saveUser: (data: any) => void,
-  deleteUser: (data: any) => void,
   onExpand: (panel: string) => void,
   fetchUsers: () => any[],
-  fetchRoles: () => any[],
-  showModal?: (type: string, props: any) => void,
-  hideModal?: () => void
+  fetchRoles: () => any[]
 };
 
 class Accounts extends PureComponent<Props> {
   props: Props;
-  static defaultProps = {
-    showModal: () => {},
-    hideModal: () => {}
-  };
   componentWillMount() {
     this.props.fetchUsers();
     this.props.fetchRoles();
@@ -53,34 +43,19 @@ class Accounts extends PureComponent<Props> {
 
   render() {
     const {
-      classes,
-      expanded,
-      onExpand,
-      users,
-      roles,
-      saveUser,
-      deleteUser,
-      showModal,
-      hideModal
+      classes, expanded, onExpand, users, roles
     } = this.props;
 
     return (
       <div className={classes.root}>
-        <ExpansionPanel
-          expanded={expanded === 'users'}
-          onChange={() => onExpand('users')}
-        >
+        <ExpansionPanel expanded={expanded === 'users'} onChange={() => onExpand('users')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Users</Typography>
-            <Typography className={classes.secondaryHeading}>
-              I am Users list
-            </Typography>
+            <Typography className={classes.secondaryHeading}>I am Users list</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
               rows={users}
-              UserDialog={UserForm}
-              DeleteComponent={DeleteGrid}
               columns={[
                 { name: 'id', title: 'User Id' },
                 { name: 'firstName', title: 'First name' },
@@ -89,47 +64,24 @@ class Accounts extends PureComponent<Props> {
                 { name: 'role', title: 'Role' },
                 { name: 'status', title: 'Status' }
               ]}
-              columnOrder={[
-                'id',
-                'firstName',
-                'lastName',
-                'email',
-                'role',
-                'status'
-              ]}
-              actions={{ add: saveUser, edit: saveUser, delete: deleteUser }}
-              showModal={showModal}
-              hideModal={hideModal}
+              columnOrder={['id', 'firstName', 'lastName', 'email', 'role', 'status']}
+              lookupValues={{
+                role: [{ key: 'admin', value: 'Admin' }, { key: 'user', value: 'User' }],
+                status: [{ key: true, value: 'Enabled' }, { key: false, value: 'Disabled' }]
+              }}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>
-        <ExpansionPanel
-          expanded={expanded === 'roles'}
-          onChange={() => onExpand('roles')}
-        >
+        <ExpansionPanel expanded={expanded === 'roles'} onChange={() => onExpand('roles')}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>Roles</Typography>
-            <Typography className={classes.secondaryHeading}>
-              I am roles panel
-            </Typography>
+            <Typography className={classes.secondaryHeading}>I am roles panel</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
               rows={roles}
-              UserDialog={props => <UserForm {...props} />}
-              DeleteComponent={DeleteGrid}
-              columns={[
-                { name: 'id', title: 'ID' },
-                { name: 'name', title: 'Name' }
-              ]}
+              columns={[{ name: 'id', title: 'ID' }, { name: 'name', title: 'Name' }]}
               columnOrder={['id', 'name']}
-              actions={{
-                add: data =>
-                  new Promise(resolve => {
-                    this.props.addUser(data);
-                    resolve(true);
-                  })
-              }}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>
