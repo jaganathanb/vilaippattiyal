@@ -13,26 +13,55 @@ const loginLogic = createLogic({
   type: actionTypes.LOGIN,
 
   async process({ action, Db }, dispatch, done) {
-    const user = await Db.User.findOne({ where: { email: action.user.email } });
+    const user = await Db.User.findOne({
+      where: { email: action.user.email },
+      include: [{ model: Db.Role }, { model: Db.Status }]
+    });
     if (user) {
       if (await user.isPasswordValid(action.user.password)) {
-        localStorage.setItem('user', JSON.stringify(user.dataValues));
+        const {
+          userId,
+          firstName,
+          lastName,
+          email,
+          Status: { name: status },
+          Roles
+        } = user.dataValues;
+
+        const loggedInUser = {
+          userId,
+          firstName,
+          lastName,
+          email,
+          status,
+          roles: Roles.map(r => r.name)
+        };
+
+        localStorage.setItem('user', JSON.stringify(loggedInUser));
+        sessionStorage.setItem('loggedId', JSON.stringify(true));
+
         dispatch({
           type: LOGIN_SUCCESS,
-          user: user.dataValues
+          payload: {
+            user: loggedInUser
+          }
         });
-        dispatch({ type: LOGIN_CHECK });
       } else {
         dispatch({
           type: LOGIN_FAILURE,
-          loggedIn: true,
-          reason: { type: 'credential' }
+          payload: {
+            loggedIn: true,
+            reason: { type: 'credential' }
+          }
         });
       }
     } else {
       dispatch({
         type: LOGIN_FAILURE,
-        reason: { type: 'register' }
+        payload: {
+          loggedIn: true,
+          reason: { type: 'register' }
+        }
       });
     }
 
@@ -44,7 +73,7 @@ const loginFailureLogic = createLogic({
   type: LOGIN_FAILURE,
 
   process({ action }, dispatch, done) {
-    switch (action.reason.type) {
+    switch (action.payload.reason.type) {
       case 'register':
         dispatch({
           type: SHOW_NOTIFICATION,

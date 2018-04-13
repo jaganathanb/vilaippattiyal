@@ -5,12 +5,16 @@ import { logout } from '../../shared/actions';
 
 import Layout from './component';
 
-const enhance = connect((state, ...rest) => ({
-  isLoading: authorizeddSelector.isLoading(state),
-  theme: authorizeddSelector.theme(state),
-  user: authorizeddSelector.user(state),
-  logout,
-  ...rest
-}));
+const enhance = connect(
+  (state, ...rest) => ({
+    isLoading: authorizeddSelector.isLoading(state),
+    theme: authorizeddSelector.theme(state),
+    user: authorizeddSelector.user(state),
+    ...rest
+  }),
+  {
+    logout
+  }
+);
 
 export default enhance(Layout);

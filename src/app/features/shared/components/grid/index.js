@@ -17,34 +17,24 @@ import {
   TableColumnReordering
 } from '@devexpress/dx-react-grid-material-ui';
 import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
 
 import { withStyles } from 'material-ui/styles';
 
-import { uniq } from 'lodash';
+import { uniq, sortBy } from 'lodash';
 
-import EditCell from './components/lookupEditCell';
+import EditCell from './components/editCell';
+import Cell from './components/cell';
 import { Command } from './components/commands';
 
 const styles = () => ({});
 
-const Cell = props => {
-  if (props.column.name === 'status') {
-    return (
-      <Checkbox checked value={props.row.status ? 'Enabled' : 'Disabled'} disabled {...props} />
-    );
-  }
-
-  return <Table.Cell {...props} />;
-};
-
 const getRowId = row => row.id;
 
 type Props = {
+  actions: { save: (data: any[]) => void, remove: (data: any) => void },
+  progress: { saved: boolean, removed: boolean },
   rows: any[],
   columns: any[],
-  columnOrder: string[],
-  lookupValues: any,
   showModal?: (type: string, props: any) => void
 };
 
@@ -61,34 +51,32 @@ class VPGrid extends PureComponent<Props> {
       deletingRows: [],
       pageSize: 0,
       pageSizes: [5, 10, 0],
-      currentColumnOrder: props.columnOrder,
+      currentColumnOrder: sortBy(props.columns, 'index').map(column => column.name),
       currentRows: props.rows,
       currentColumns: props.columns
     };
   }
   componentWillReceiveProps(nextProps) {
-    if (this.areDifferentByIds(nextProps.columns, this.props.columns, 'name')) {
-      this.setState({ currentColumns: nextProps.columns });
+    const tableColumnExtensions = nextProps.columns.map(column => {
+      if (column.type === 'number') {
+        return {
+          columnName: column.name,
+          align: 'right'
+        };
+      }
+      return { columnName: column.name };
+    });
+
+    this.setState({
+      currentColumnOrder: sortBy(nextProps.columns, 'index').map(column => column.name),
+      tableColumnExtensions,
+      currentColumns: nextProps.columns,
+      currentRows: nextProps.rows
+    });
+
+    if (nextProps.progress.saved) {
+      console.log(`Data saved? ${nextProps.progress.saved}`);
     }
-
-    if (nextProps.columnOrder.toString() !== this.props.columnOrder.toString()) {
-      const tableColumnExtensions = nextProps.columns.map(column => {
-        if (column.type === 'number') {
-          return {
-            columnName: column.name,
-            align: 'right'
-          };
-        }
-        return { columnName: column.name };
-      });
-
-      this.setState({
-        currentColumnOrder: nextProps.columnOrder,
-        tableColumnExtensions
-      });
-    }
-
-    this.setState({ currentRows: nextProps.rows });
   }
 
   areDifferentByIds = (next, current, prop) => {
@@ -104,17 +92,7 @@ class VPGrid extends PureComponent<Props> {
 
   changeAddedRows = addedRows =>
     this.setState({
-      addedRows: addedRows.map(row =>
-        (Object.keys(row).length
-          ? row
-          : {
-            id: 0,
-            firstName: '',
-            lastName: '',
-            email: '',
-            role: this.props.lookupValues.roles[0],
-            status: this.props.lookupValues.status[0]
-          }))
+      addedRows
     });
 
   changeRowChanges = rowChanges => this.setState({ rowChanges });
@@ -123,26 +101,18 @@ class VPGrid extends PureComponent<Props> {
 
   changePageSize = pageSize => this.setState({ pageSize });
 
-  commitChanges = ({ added, changed, deleted }) => {
-    let { currentRows } = this.state;
+  commitChanges = ({ added, changed }) => {
+    const { currentRows } = this.state;
     if (added) {
-      const startingAddedId =
-        currentRows.length - 1 > 0 ? currentRows[currentRows.length - 1].id + 1 : 0;
-      currentRows = [
-        ...currentRows,
-        ...added.map((row, index) => ({
-          id: startingAddedId + index,
-          ...currentRows
-        }))
-      ];
+      this.saveRow(added[0]);
     }
     if (changed) {
-      currentRows = currentRows.map(row => (changed[row.id] ? { ...row, ...changed[row.id] } : row));
+      const changedRows = Object.values(changed);
+      if (changedRows.length) {
+        const updatedRow = currentRows.filter(row => changed[row.id])[0];
+        this.updateRow({ id: updatedRow.id, ...changed[updatedRow.id] });
+      }
     }
-    this.setState({
-      currentRows,
-      deletingRows: deleted || this.state.deletingRows
-    });
   };
 
   cancelDelete = () => this.setState({ deletingRows: [] });
@@ -151,26 +121,12 @@ class VPGrid extends PureComponent<Props> {
 
   cancelAdd = () => this.setState({ addedRows: [] });
 
-  saveRow = () => {
-    const rows = this.state.currentRows.slice();
-    this.state.editingRowIds.forEach(rowId => {
-      const index = rows.findIndex(row => row.id === rowId);
-      if (index > -1) {
-        rows.splice(index, 1);
-      }
-    });
-    this.setState({ currentRows: rows, deletingRows: [] });
+  saveRow = row => {
+    this.props.actions.save(row);
   };
 
-  updateRow = () => {
-    const rows = this.state.currentRows.slice();
-    this.state.editingRowIds.forEach(rowId => {
-      const index = rows.findIndex(row => row.id === rowId);
-      if (index > -1) {
-        rows.splice(index, 1);
-      }
-    });
-    this.setState({ currentRows: rows, deletingRows: [] });
+  updateRow = row => {
+    this.props.actions.save(row);
   };
 
   deleteRows = () => {

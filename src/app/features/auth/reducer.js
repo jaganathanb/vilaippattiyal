@@ -5,7 +5,7 @@ import { DEFAILT_THEME } from '../../utils/constants';
 
 export const key = 'auth';
 export loginReducer, { key as loginKey } from './components/login/reducer';
-export registrationReducer, {key as registrationKey} from './components/registration/reducer';
+export registrationReducer, { key as registrationKey } from './components/registration/reducer';
 
 export const selectors = {
   theme: state => {

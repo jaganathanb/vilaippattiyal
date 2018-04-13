@@ -12,6 +12,7 @@ const enhance = connect(
     expanded: selectors.expanded(state),
     users: selectors.users(state),
     roles: selectors.roles(state),
+    statuses: selectors.statuses(state),
     rolesError: selectors.rolesError(state),
     usersError: selectors.usersError(state),
     userSaved: selectors.userSaved(state),
@@ -20,9 +21,12 @@ const enhance = connect(
   {
     saveUser: actions.saveUser,
     deleteUser: actions.deleteUser,
+    saveRole: actions.saveRole,
+    removeRole: actions.removeRole,
     onExpand: actions.expand,
     fetchUsers: actions.fetchUsers,
     fetchRoles: actions.fetchRoles,
+    fetchStatuses: actions.fetchStatuses,
     showModal,
     hideModal
   }

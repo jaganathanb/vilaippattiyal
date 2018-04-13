@@ -5,7 +5,11 @@ import { LOGIN_CHECK, LOGOUT, LOGIN_SUCCESS, LOGIN_FAILURE } from './actions';
 const logoutLogic = createLogic({
   type: LOGOUT,
   process({ action }, dispatch, done) {
-    dispatch({ type: LOGIN_CHECK, loggedIn: false });
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('loggedIn');
+    dispatch({
+      type: LOGIN_CHECK
+    });
     done();
   }
 });
@@ -20,18 +24,59 @@ const loginCheckLogic = createLogic({
       user = null;
     }
 
-    if (user) {
+    if (user || sessionStorage.getItem('loggedIn')) {
       user = await Db.User.findOne({
-        where: { id: user.id }
+        where: { userId: user.userId },
+        include: [{ model: Db.Role }, { model: Db.Status }]
       });
+
       if (user) {
-        dispatch({ type: LOGIN_SUCCESS, loggedIn: user !== null, user });
+        const {
+          userId,
+          firstName,
+          lastName,
+          email,
+          Status: { name: status },
+          Roles
+        } = user.dataValues;
+
+        const loggedInUser = {
+          userId,
+          firstName,
+          lastName,
+          email,
+          status,
+          roles: Roles.map(r => r.name)
+        };
+
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: {
+            loggedIn: loggedInUser !== null,
+            user: loggedInUser
+          }
+        });
       } else {
-        dispatch({ type: LOGIN_FAILURE, loggedIn: false });
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('loggedIn');
+        dispatch({
+          type: LOGIN_FAILURE,
+          payload: {
+            loggedIn: false,
+            reason: { type: 'internal', text: 'Something went wrong' }
+          }
+        });
       }
     } else {
       localStorage.removeItem('user');
-      dispatch({ type: LOGIN_FAILURE, loggedIn: false });
+      sessionStorage.removeItem('loggedIn');
+      dispatch({
+        type: LOGIN_FAILURE,
+        payload: {
+          loggedIn: false,
+          reason: { type: 'internal', text: 'Something went wrong' }
+        }
+      });
     }
 
     done();

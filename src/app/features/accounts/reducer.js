@@ -1,5 +1,7 @@
 import { actionTypes } from './actions';
 
+import { FETCH_LOOKUPS_SUCCESS } from '../shared/actions';
+
 export const key = 'accounts';
 export const selectors = {
   expanded: state => state[key].expanded,
@@ -7,6 +9,7 @@ export const selectors = {
   usersError: state => state[key].usersError,
   users: state => state[key].users,
   roles: state => state[key].roles,
+  statuses: state => state[key].statuses,
   isUserSaving: state => state[key].isUserSaving,
   userSaved: state => state[key].userSaved,
   userDeleted: state => state[key].userDeleted,
@@ -21,6 +24,7 @@ const initialState = {
   userDeleteError: '',
   roles: [],
   users: [],
+  statuses: [],
   expanded: 'users',
   userSaved: false,
   userDeleted: false
@@ -47,7 +51,7 @@ export default function reducer(state = initialState, action) {
         userDeleteError: action.reason.text
       };
     case actionTypes.EXPAND_ACCOUNT_PANEL:
-      return { ...state, expanded: action.panel };
+      return { ...state, expanded: action.payload.panel };
     case actionTypes.FETCH_ROLES_PROGRESS:
       return { ...state, rolesInProgress: true };
     case actionTypes.FETCH_USERS_PROGRESS:
@@ -57,26 +61,31 @@ export default function reducer(state = initialState, action) {
         ...state,
         rolesInProgress: false,
         rolesError: '',
-        roles: action.roles
+        roles: action.payload.roles
       };
     case actionTypes.FETCH_USERS_SUCCESS:
       return {
         ...state,
         usersInProgress: false,
         usersError: '',
-        users: action.users
+        users: action.payload.users
       };
     case actionTypes.FETCH_ROLES_FAILED:
       return {
         ...state,
         rolesInProgress: false,
-        rolesError: action.reason.text
+        rolesError: action.payload.reason.text
+      };
+    case actionTypes.FETCH_STATUS_SUCCESS:
+      return {
+        ...state,
+        statuses: action.payload.statuses
       };
     case actionTypes.FETCH_USERS_FAILED:
       return {
         ...state,
         usersInProgress: false,
-        usersError: action.reason.text
+        usersError: action.payload.reason.text
       };
     default:
       return state;

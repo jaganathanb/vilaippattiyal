@@ -18,9 +18,7 @@ export const selectors = { isLoading, theme, user };
 const initialState = {
   isLoading: true,
   theme: localStorage.getItem('theme') || DEFAILT_THEME,
-  user: localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user'))
-    : null
+  user: null
 };
 
 export default function reducer(state = initialState, action) {
@@ -30,7 +28,7 @@ export default function reducer(state = initialState, action) {
     case CHANGE_THEME:
       return { ...state, theme: action.theme };
     case LOGIN_SUCCESS:
-      return { ...state, user: action.user };
+      return { ...state, user: action.payload.user };
     default:
       return { ...state, isLoading: false };
   }

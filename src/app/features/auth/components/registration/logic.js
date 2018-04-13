@@ -8,38 +8,45 @@ import translations from './translations';
 const registrationLogic = createLogic({
   type: actionTypes.REGISTRATION,
   async process({ action, Db }, dispatch, done) {
-    const user = await Db.User.findOne({ where: { email: action.user.email } });
+    const user = await Db.User.findOne({
+      where: { email: action.user.email }
+    });
+
     if (user) {
       dispatch({
         type: actionTypes.REGISTRATION_FAILURE,
         reason: { type: 'register' }
       });
     } else {
-      const data = {
-        email: action.user.email,
-        password: action.user.password,
-        firstName: action.user.firstname,
-        lastName: action.user.lastname,
-        createdAt: new Date()
-      };
+      let role = await Db.Role.findOne({ where: { name: 'User' } });
+      let status = await Db.Status.findOne({ where: { name: true } });
 
-      const newUser = await Db.User.create(data);
-      if (!newUser) {
-        dispatch({
-          type: actionTypes.REGISTRATION_FAILURE,
-          reason: { type: 'error' }
-        });
+      if (!role) {
+        role = await Db.Role.create({ name: 'User' });
       }
 
-      if (newUser) {
+      if (!status) {
+        status = await Db.Status.create({ name: true });
+      }
+
+      try {
+        const newUser = await Db.User.create(action.user);
+        await newUser.setRoles([role]);
+        await newUser.setStatus(status);
+
         dispatch({
           type: actionTypes.REGISTRATION_SUCCESS,
           reason: { type: 'success' }
         });
+      } catch (error) {
+        dispatch({
+          type: actionTypes.REGISTRATION_FAILURE,
+          reason: { type: 'error', text: error }
+        });
       }
-    }
 
-    done();
+      done();
+    }
   }
 });
 
@@ -93,9 +100,5 @@ const registrationSuccessLogic = createLogic({
   }
 });
 
-export default [
-  registrationLogic,
-  registrationFailureLogic,
-  registrationSuccessLogic
-];
+export default [registrationLogic, registrationFailureLogic, registrationSuccessLogic];
 //

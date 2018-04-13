@@ -5,7 +5,8 @@ import { selectors } from './reducer';
 
 const enhance = connect(
   (state, ...rest) => ({
-    theme: selectors.theme(state), ...rest
+    theme: selectors.theme(state),
+    ...rest
   }),
   {}
 );

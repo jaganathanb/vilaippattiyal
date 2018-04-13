@@ -6,6 +6,14 @@ const DELETE_USER = 'DELETE_USER';
 const DELETE_USER_SUCCESS = 'DELETE_USER_SUCCESS';
 const DELETE_USER_FAILURE = 'DELETE_USER_FAILURE';
 
+const SAVE_ROLE = 'SAVE_ROLE';
+const SAVE_ROLE_SUCCESS = 'SAVE_ROLE_SUCCESS';
+const SAVE_ROLE_FAILURE = 'SAVE_ROLE_FAILURE';
+
+const REMOVE_ROLE = 'REMOVE_ROLE';
+const REMOVE_ROLE_SUCCESS = 'REMOVE_ROLE_SUCCESS';
+const REMOVE_ROLE_FAILURE = 'REMOVE_ROLE_FAILURE';
+
 const FETCH_USERS = 'FETCH_USERS';
 const FETCH_USERS_FAILED = 'FETCH_USERS_FAILED';
 const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
@@ -16,8 +24,19 @@ const FETCH_ROLES_FAILED = 'FETCH_ROLES_FAILED';
 const FETCH_ROLES_SUCCESS = 'FETCH_ROLES_SUCCESS';
 const FETCH_ROLES_PROGRESS = 'FETCH_ROLES_PROGRESS';
 
+const FETCH_STATUS = 'FETCH_STATUS';
+const FETCH_STATUS_FAILED = 'FETCH_STATUS_FAILED';
+const FETCH_STATUS_SUCCESS = 'FETCH_STATUS_SUCCESS';
+
 const EXPAND_ACCOUNT_PANEL = 'EXPAND_ACCOUNT_PANEL';
+
 export const actionTypes = {
+  SAVE_ROLE_FAILURE,
+  SAVE_ROLE_SUCCESS,
+  SAVE_ROLE,
+  REMOVE_ROLE_FAILURE,
+  REMOVE_ROLE_SUCCESS,
+  REMOVE_ROLE,
   SAVE_USER,
   SAVE_USER_SUCCESS,
   SAVE_USER_FAILURE,
@@ -32,34 +51,31 @@ export const actionTypes = {
   FETCH_ROLES_FAILED,
   FETCH_ROLES_SUCCESS,
   FETCH_ROLES_PROGRESS,
+  FETCH_STATUS_SUCCESS,
+  FETCH_STATUS_FAILED,
+  FETCH_STATUS,
   EXPAND_ACCOUNT_PANEL
 };
 
-const saveUser = user => ({ type: SAVE_USER, user });
-const deleteUser = user => ({ type: DELETE_USER, user });
+const saveRole = role => ({ type: SAVE_ROLE, payload: { role } });
+const removeRole = role => ({ type: REMOVE_ROLE, payload: { role } });
+const saveUser = user => ({ type: SAVE_USER, payload: { user } });
+const deleteUser = user => ({ type: DELETE_USER, payload: { user } });
 const fetchUsers = () => ({ type: FETCH_USERS });
 const fetchRoles = () => ({ type: FETCH_ROLES });
-const fetchUsersInProgress = () => ({ type: FETCH_USERS_PROGRESS });
-const fetchUsersSuccess = users => ({ type: FETCH_USERS_SUCCESS, users });
-const fetchRolesSuccess = roles => ({ type: FETCH_ROLES_SUCCESS, roles });
-const fetchRolesFailure = reason => ({ type: FETCH_ROLES_FAILED, reason });
-const fetchUsersFailure = reason => ({ type: FETCH_USERS_FAILED, reason });
-const fetchRolesInProgress = () => ({ type: FETCH_ROLES_PROGRESS });
+const fetchStatuses = () => ({ type: FETCH_STATUS });
 const expand = panel => ({
   type: EXPAND_ACCOUNT_PANEL,
-  panel
+  payload: { panel }
 });
 
 export default {
+  removeRole,
+  saveRole,
   saveUser,
   deleteUser,
   fetchRoles,
   fetchUsers,
   expand,
-  fetchRolesInProgress,
-  fetchUsersInProgress,
-  fetchRolesFailure,
-  fetchUsersFailure,
-  fetchRolesSuccess,
-  fetchUsersSuccess
+  fetchStatuses
 };

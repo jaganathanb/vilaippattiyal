@@ -3,11 +3,7 @@ import { injectIntl, intlShape } from 'react-intl';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-  withStyles
-} from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme, withStyles } from 'material-ui/styles';
 import { CircularProgress } from 'material-ui/Progress';
 
 import AppBar from '../../appBar';
@@ -56,13 +52,7 @@ class MiniDrawer extends React.Component<Props> {
   props: Props;
   render() {
     const {
-      theme,
-      intl,
-      classes,
-      match,
-      isLoading,
-      history,
-      user
+      theme, intl, classes, match, isLoading, history, user
     } = this.props;
 
     const muiTheme = createMuiTheme(theme);
@@ -71,18 +61,12 @@ class MiniDrawer extends React.Component<Props> {
       <MuiThemeProvider theme={muiTheme}>
         <div className={classes.root}>
           <AppBar title={intl.formatMessage(translations.appBarTitle)} />
-          <Sidebar
-            user={user}
-            theme={muiTheme}
-            intl={intl}
-            history={history}
-            match={match}
-          />
+          <Sidebar user={user} theme={muiTheme} intl={intl} history={history} match={match} />
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
               {routes
-                .filter(route => route.requiredRole === user.role)
+                .filter(route => user.roles.indexOf(route.requiredRole) >= 0)
                 .map(route => (
                   <Route
                     {...route}
@@ -96,12 +80,7 @@ class MiniDrawer extends React.Component<Props> {
           </main>
         </div>
         {isLoading && (
-          <CircularProgress
-            className="app-loader"
-            color="primary"
-            size={120}
-            thickness={3}
-          />
+          <CircularProgress className="app-loader" color="primary" size={120} thickness={3} />
         )}
       </MuiThemeProvider>
     );

@@ -7,7 +7,7 @@ const UserModel = (sequelizeInstance, name) => {
   const User = sequelizeInstance.define(
     name,
     {
-      id: {
+      userId: {
         type: Sequelize.UUID,
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4,
@@ -17,18 +17,6 @@ const UserModel = (sequelizeInstance, name) => {
         type: Sequelize.STRING,
         defaultValue: 'a',
         required: true
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        required: true,
-        defaultValue: true,
-        values: [true, false]
-      },
-      role: {
-        type: Sequelize.STRING,
-        required: true,
-        defaultValue: 'admin',
-        values: ['admin', 'user']
       },
       lastName: {
         defaultValue: 'b',
@@ -76,7 +64,13 @@ const UserModel = (sequelizeInstance, name) => {
   };
 
   User.associate = (user, models) => {
-    user.belongsToMany(models.Role, { through: 'UserRole' });
+    user.belongsToMany(models.Role, {
+      through: 'UserRoles',
+      foreignKey: 'userId',
+      otherKey: 'roleId',
+      onDelete: 'cascade'
+    });
+    user.belongsTo(models.Status, { foreignKey: 'statusId' });
   };
 
   User.prototype.isPasswordValid = async function isPasswordValid(passwordInput) {

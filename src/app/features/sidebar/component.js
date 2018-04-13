@@ -68,20 +68,18 @@ class Sidebar extends PureComponent<Props> {
   }
   getMenuList(menus) {
     const {
- currentTab, classes, user, intl 
-} = this.props;
+      currentTab, classes, user, intl
+    } = this.props;
     return (
       <MenuList>
-        {menus.filter(menu => menu.requiredRole === user.role).map(menu => (
+        {menus.filter(menu => user.roles.indexOf(menu.requiredRole) >= 0).map(menu => (
           <MenuItem
             className={classes.menuItem}
             onClick={this.menuItemClicked.bind(this, menu.key)}
             key={menu.key}
           >
             <ListItemIcon className={classes.icon}>
-              <menu.icon
-                className={currentTab === menu.key ? classes[menu.key] : null}
-              />
+              <menu.icon className={currentTab === menu.key ? classes[menu.key] : null} />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.primary }}
@@ -101,10 +99,7 @@ class Sidebar extends PureComponent<Props> {
       <Drawer
         variant="permanent"
         classes={{
-          paper: classNames(
-            classes.drawerPaper,
-            !expanded && classes.drawerPaperClose
-          )
+          paper: classNames(classes.drawerPaper, !expanded && classes.drawerPaperClose)
         }}
         open={expanded}
       >

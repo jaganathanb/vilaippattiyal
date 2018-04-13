@@ -29,9 +29,17 @@ type Props = {
   classes: any,
   users: any[],
   roles: any[],
+  statuses: any,
+  userDeleted: boolean,
+  userSaved: boolean,
   onExpand: (panel: string) => void,
+  saveRole: (data: any) => void,
+  removeRole: (data: any) => void,
+  saveUser: (data: any[]) => void,
+  deleteUser: (data: any) => void,
   fetchUsers: () => any[],
-  fetchRoles: () => any[]
+  fetchRoles: () => any[],
+  fetchStatuses: () => any[]
 };
 
 class Accounts extends PureComponent<Props> {
@@ -39,11 +47,23 @@ class Accounts extends PureComponent<Props> {
   componentWillMount() {
     this.props.fetchUsers();
     this.props.fetchRoles();
+    this.props.fetchStatuses();
   }
 
   render() {
     const {
-      classes, expanded, onExpand, users, roles
+      classes,
+      expanded,
+      onExpand,
+      users,
+      roles,
+      statuses,
+      saveRole,
+      removeRole,
+      saveUser,
+      deleteUser,
+      userSaved,
+      userDeleted
     } = this.props;
 
     return (
@@ -55,20 +75,43 @@ class Accounts extends PureComponent<Props> {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
+              actions={{ save: saveUser, remove: deleteUser }}
+              progress={{ saved: userSaved, removed: userDeleted }}
               rows={users}
               columns={[
-                { name: 'id', title: 'User Id' },
-                { name: 'firstName', title: 'First name' },
-                { name: 'lastName', title: 'Last name' },
-                { name: 'email', title: 'Email' },
-                { name: 'role', title: 'Role' },
-                { name: 'status', title: 'Status' }
+                {
+                  name: 'firstName',
+                  title: 'First name',
+                  type: 'string',
+                  index: 1
+                },
+                {
+                  name: 'lastName',
+                  title: 'Last name',
+                  type: 'string',
+                  index: 2
+                },
+                {
+                  name: 'email',
+                  title: 'Email',
+                  type: 'string',
+                  index: 3
+                },
+                {
+                  name: 'role',
+                  title: 'Role',
+                  type: 'multiselect',
+                  index: 4,
+                  lookups: roles.map(role => ({ key: role.roleId, value: role.name }))
+                },
+                {
+                  name: 'status',
+                  title: 'Status',
+                  type: 'choice',
+                  index: 5,
+                  lookups: statuses.map(status => ({ key: status.statusId, value: status.name }))
+                }
               ]}
-              columnOrder={['id', 'firstName', 'lastName', 'email', 'role', 'status']}
-              lookupValues={{
-                role: [{ key: 'admin', value: 'Admin' }, { key: 'user', value: 'User' }],
-                status: [{ key: true, value: 'Enabled' }, { key: false, value: 'Disabled' }]
-              }}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -79,9 +122,10 @@ class Accounts extends PureComponent<Props> {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <VPGrid
+              actions={{ save: saveRole, remove: removeRole }}
+              progress={{ saved: userSaved, removed: userDeleted }}
               rows={roles}
-              columns={[{ name: 'id', title: 'ID' }, { name: 'name', title: 'Name' }]}
-              columnOrder={['id', 'name']}
+              columns={[{ name: 'name', title: 'Name' }]}
             />
           </ExpansionPanelDetails>
         </ExpansionPanel>

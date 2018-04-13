@@ -8,7 +8,7 @@ export default [
   {
     path: '/',
     component: VPDashboard,
-    requiredRole: 'admin',
+    requiredRole: 'Admin',
     icon: Dashboard,
     exact: true,
     key: 'dashboard',
@@ -22,7 +22,7 @@ export default [
     key: 'configurations',
     icon: Settings,
     component: Configurations,
-    requiredRole: 'admin',
+    requiredRole: 'Admin',
     translation: {
       id: 'vp.sideBar.configuration.title',
       defaultMessage: 'Configuration'
@@ -33,7 +33,7 @@ export default [
     key: 'accounts',
     component: Accounts,
     icon: AccountBox,
-    requiredRole: 'admin',
+    requiredRole: 'User',
     translation: {
       id: 'vp.sideBar.accounts.title',
       defaultMessage: 'Accounts'
