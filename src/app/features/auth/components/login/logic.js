@@ -59,7 +59,7 @@ const loginLogic = createLogic({
       dispatch({
         type: LOGIN_FAILURE,
         payload: {
-          loggedIn: true,
+          loggedIn: false,
           reason: { type: 'register' }
         }
       });
