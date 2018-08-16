@@ -48,7 +48,7 @@ type Props = {
   user: any
 };
 
-class MiniDrawer extends React.Component<Props> {
+class AppLayout extends React.Component<Props> {
   props: Props;
   render() {
     const {
@@ -65,15 +65,9 @@ class MiniDrawer extends React.Component<Props> {
           <main className={classes.content}>
             <div className={classes.toolbar} />
             <Switch>
-              {routes
-                .filter(route => user.roles.indexOf(route.requiredRole) >= 0)
-                .map(route => (
-                  <Route
-                    {...route}
-                    path={`${match.path}${route.path}`}
-                    component={route.component}
-                  />
-                ))}
+              {routes.filter(route => user.roles.indexOf(route.requiredRole) >= 0).map(route => (
+                <Route {...route} path={`${match.path}${route.path}`} component={route.component} />
+              ))}
               <Redirect to={`${match.url}`} />
             </Switch>
             <VPModal />
@@ -87,4 +81,4 @@ class MiniDrawer extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(injectIntl(MiniDrawer));
+export default withStyles(styles, { withTheme: true })(injectIntl(AppLayout));
