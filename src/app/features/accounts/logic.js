@@ -1,7 +1,7 @@
 import { createLogic } from 'redux-logic';
 
-import { omit } from 'lodash';
-import { isUndefined } from 'util';
+import { omit, isUndefined } from 'lodash';
+import Helper from '../../utils/helper';
 
 import { actionTypes } from './actions';
 
@@ -29,7 +29,7 @@ const setStatus = async (Db, dispatch, payload, user) => {
   });
 
   if (status) {
-    await user.setStatus(status);
+    user.setStatus(status);
   } else {
     dispatchSaveFailure(dispatch, 'Status not found');
   }
@@ -40,8 +40,8 @@ const setRoles = async (Db, dispatch, payload, user) => {
     where: { name: { [Db.sequelize.Op.or]: [payload.user.role] } }
   });
 
-  if (roles.length > 0 && !await user.hasRoles(roles)) {
-    await user.setRoles(roles);
+  if (roles.length > 0 && !(await user.hasRoles(roles))) {
+    user.setRoles(roles);
   } else {
     dispatchSaveFailure(dispatch, 'Role not found');
   }
@@ -78,6 +78,7 @@ const saveRoleLogic = createLogic({
       }
     }
 
+    dispatch({ type: actionTypes.FETCH_ROLES });
     done();
   }
 });
@@ -91,25 +92,49 @@ const saveUserLogic = createLogic({
     });
 
     if (user) {
-      if (action.payload.user.role) {
-        setRoles(Db, dispatch, action.payload, user);
-      }
-
-      if (!isUndefined(action.payload.user.role)) {
-        setStatus(Db, dispatch, action.payload, user);
-      }
-
-      const userToBeSaved = omit(action.payload.user, ['role', 'status', 'id']);
-
-      try {
-        if (Object.keys(userToBeSaved).length > 0) {
-          await Db.User.update(userToBeSaved, {
-            where: { userId: { [Db.sequelize.Op.eq]: action.payload.user.id } }
+      const loggedInUser = Helper.getLogginUser();
+      if (loggedInUser) {
+        if (loggedInUser.userId === user.userId) {
+          const users = await Db.User.findAll({
+            include: [
+              {
+                model: Db.Status,
+                where: {
+                  name: { [Db.sequelize.Op.eq]: true }
+                }
+              },
+              {
+                model: Db.Role,
+                where: {
+                  name: {
+                    [Db.sequelize.Op.eq]: 'Admin'
+                  }
+                }
+              }
+            ]
           });
         }
-        dispatchSaveSuccess(dispatch, 'User saved successfully.');
-      } catch (error) {
-        dispatchSaveFailure(dispatch, `Error while updating user ${error}`);
+
+        if (action.payload.user.role) {
+          setRoles(Db, dispatch, action.payload, user);
+        }
+
+        if (!isUndefined(action.payload.user.status)) {
+          setStatus(Db, dispatch, action.payload, user);
+        }
+
+        const userToBeSaved = omit(action.payload.user, ['role', 'status', 'id']);
+
+        try {
+          if (Object.keys(userToBeSaved).length > 0) {
+            await Db.User.update(userToBeSaved, {
+              where: { userId: { [Db.sequelize.Op.eq]: action.payload.user.id } }
+            });
+          }
+          dispatchSaveSuccess(dispatch, 'User saved successfully.');
+        } catch (error) {
+          dispatchSaveFailure(dispatch, `Error while updating user ${error}`);
+        }
       }
     } else if (action.payload.user.id) {
       dispatchSaveFailure(dispatch, 'User not found');
@@ -126,6 +151,7 @@ const saveUserLogic = createLogic({
       }
     }
 
+    dispatch({ type: actionTypes.FETCH_USERS });
     done();
   }
 });
@@ -177,7 +203,7 @@ const deleteUserLogic = createLogic({
 
 const usersLogic = createLogic({
   type: actionTypes.FETCH_USERS,
-  async process({ action, Db }, dispatch, done) {
+  async process({ Db }, dispatch, done) {
     dispatch({ type: actionTypes.FETCH_USERS_PROGRESS });
     let users = null;
     try {

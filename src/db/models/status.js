@@ -22,13 +22,7 @@ const StatusModel = (sequelizeInstance, name) => {
     }
   );
 
-  Status.associate = (status, models) => {
-    // status.belongsToMany(models.User, {
-    //   through: 'UserStatus',
-    //   foreignKey: 'userId',
-    //   otherKey: 'statusId'
-    // });
-  };
+  Status.associate = () => {};
 
   return Status;
 };

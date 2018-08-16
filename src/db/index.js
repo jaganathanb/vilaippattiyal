@@ -1,7 +1,12 @@
 import { Sequelize } from 'sequelize';
 
+import { existsSync } from 'fs';
+import path from 'path';
+import { homedir } from 'os';
+
 import dbConfig from './config';
 import * as models from './models';
+import { executeSeeds } from './setup';
 
 // Sequelize is a constructor
 const sequelize = new Sequelize(null, null, dbConfig[process.env.NODE_ENV].password, {
@@ -28,9 +33,16 @@ Object.keys(vpModels).forEach(name => {
 vpModels.sequelize = sequelize;
 
 const setupDb = () =>
-  vpModels.sequelize.sync({
-    force: false
-  });
+  vpModels.sequelize
+    .sync({
+      force: false
+    })
+    .then(() => {
+      if (!existsSync(path.join(homedir(), 'vp.sqlite'))) {
+        executeSeeds();
+      }
+      return true;
+    });
 
 export default {
   setupDb,

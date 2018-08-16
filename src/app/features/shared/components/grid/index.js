@@ -32,7 +32,6 @@ const getRowId = row => row.id;
 
 type Props = {
   actions: { save: (data: any[]) => void, remove: (data: any) => void },
-  progress: { saved: boolean, removed: boolean },
   rows: any[],
   columns: any[],
   showModal?: (type: string, props: any) => void

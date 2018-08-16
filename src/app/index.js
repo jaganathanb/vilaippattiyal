@@ -37,11 +37,7 @@ if (module.hot) {
     const NextRoot = require('./Root'); // eslint-disable-line global-require
     render(
       <AppContainer>
-        <NextRoot
-          store={store}
-          history={history}
-          messages={translationMessages}
-        />
+        <NextRoot store={store} history={history} messages={translationMessages} />
       </AppContainer>,
       document.getElementById('root')
     );
@@ -58,11 +54,7 @@ if (module.hot) {
         const NextRoot = require('./Root'); // eslint-disable-line global-require
         return render(
           <AppContainer>
-            <NextRoot
-              store={store}
-              history={history}
-              messages={messages.translationMessages}
-            />
+            <NextRoot store={store} history={history} messages={messages.translationMessages} />
           </AppContainer>,
           document.getElementById('root')
         );

@@ -11,6 +11,8 @@ const enhance = connect(
   state => ({
     expanded: selectors.expanded(state),
     users: selectors.users(state),
+    usersInProgress: selectors.usersInProgress(state),
+    rolesInProgress: selectors.rolesInProgress(state),
     roles: selectors.roles(state),
     statuses: selectors.statuses(state),
     rolesError: selectors.rolesError(state),
